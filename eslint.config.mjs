@@ -40,9 +40,13 @@ const eslintConfig = defineConfig([
       ],
       "no-restricted-globals": [
         "error",
-        ...["window", "document", "navigator", "localStorage", "sessionStorage", "location"].map(
-          (name) => ({ name, message: `TC-PURE-01: no browser global \`${name}\` — ${PURE_HINT}` }),
-        ),
+        {
+          // checkGlobalObject also catches access through the global object, e.g. globalThis.document.
+          checkGlobalObject: true,
+          globals: ["window", "document", "navigator", "localStorage", "sessionStorage", "location"].map(
+            (name) => ({ name, message: `TC-PURE-01: no browser global \`${name}\` — ${PURE_HINT}` }),
+          ),
+        },
       ],
     },
   },

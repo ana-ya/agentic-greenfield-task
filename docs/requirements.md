@@ -90,7 +90,7 @@ Status values: `proposed` · `accepted` · `shipped` · `dropped`.
 
 | ID            | Description                                                                                                              | Status     |
 | ------------- | ------------------------------------------------------------------------------------------------------------------------ | ---------- |
-| FR-COMFORT-01 | `comfortScore(daily): { value: 0..100; rationale: string }` is a **pure function** in `lib/scoring/comfort.ts`            | proposed   |
+| FR-COMFORT-01 | `comfortScore(daily): { value: number \| null; rationale: string }` is a **pure, total function** in `lib/scoring/comfort.ts`: `value` is 0–100, or `null` when there is not enough data (FR-COMFORT-09) | proposed |
 | FR-COMFORT-02 | Inputs per day: apparent temperature max, precipitation probability max, wind speed max, mean cloud cover 09:00–18:00 place time (from hourly `cloud_cover`), UV index max | proposed |
 | FR-COMFORT-03 | Output rationale is a single sentence in Ukrainian, max 80 chars, no emojis                                              | proposed   |
 | FR-COMFORT-04 | Score for each day is displayed in the day card as a ComfortBadge: number and word on the good (≥ 70), fair (40–69) or poor (< 40) fill from DESIGN.md; colour is never the only signal | proposed |
@@ -98,6 +98,7 @@ Status values: `proposed` · `accepted` · `shipped` · `dropped`.
 | FR-COMFORT-06 | "Upcoming weekend" by the place's local date: Monday–Saturday → this week's Saturday + Sunday (on Saturday, today and tomorrow); Sunday → next week's Saturday + Sunday | proposed |
 | FR-COMFORT-07 | The score and rationale follow the model in Appendix A; its reference cases are acceptance tests | proposed |
 | FR-COMFORT-08 | The weekend verdict follows the weekend score's band: ≥ 70 «‹місто› — варто їхати», 40–69 «‹місто› — можна їхати, але з планом Б», < 40 «‹місто› — краще перенести» | proposed |
+| FR-COMFORT-09 | When all six inputs of a day are missing, the day has **no score**: `value` is `null` and the rationale is «Немає даних для оцінки.» The day card shows a neutral «Немає даних» badge (no comfort colour, never a number). If Saturday or Sunday has no score, there is no weekend verdict: the weekend panel shows an info Notice «Прогноз на ці вихідні поки недоступний.» instead | proposed |
 
 ### Animated background (capability `animated-bg`)
 
@@ -185,7 +186,7 @@ Status values: `proposed` · `accepted` · `shipped` · `dropped`.
 | Cloud | mean hourly `cloud_cover` 09:00–18:00 (C, %) | 0.1 × C | 10 |
 | UV | daily `uv_index_max` (U) | 3 × (U − 5) when U > 5 | 15 |
 
-Missing inputs count as zero penalty; the function is total and never throws.
+A missing input adds no penalty. If **all six** inputs are missing, the day has no score: `{ value: null, rationale: "Немає даних для оцінки." }` (FR-COMFORT-09). Without this rule, a day with no data would score 100 and read as "ideal". The function is total and never throws.
 
 **Rationale:** if Σ penalties < 20 the day is "ideal". Otherwise the factor with the largest penalty decides, with "strong" wording when that penalty is ≥ 20 (ties: the order of the table). Each line is one sentence of ≤ 80 characters:
 
@@ -203,7 +204,7 @@ Missing inputs count as zero penalty; the function is total and never throws.
 | cloud | Похмуро, але сухо й спокійно. |
 | uv | Сонце активне — знадобляться капелюх і крем від сонця. |
 
-**Weekend score:** `roundHalfUp((saturday + sunday) / 2)`; the weekend rationale is Saturday's or Sunday's, whichever scored lower.
+**Weekend score:** `roundHalfUp((saturday + sunday) / 2)`; the weekend rationale is Saturday's or Sunday's, whichever scored lower. If either day has no score, there is no weekend score (FR-COMFORT-09).
 
 **Reference cases** (acceptance tests for FR-COMFORT-07):
 
@@ -219,6 +220,7 @@ Missing inputs count as zero penalty; the function is total and never throws.
 | Літня спека | 33 | 5 | 10 | 10 | 9 | 48 | fair | heat, strong |
 | Дощовий день | 16 | 90 | 20 | 100 | 2 | 26 | poor | rain, strong |
 | Злива з вітром | 14 | 100 | 45 | 100 | 1 | 0 | poor | rain, strong |
+| Немає даних | — | — | — | — | — | `null` | — | «Немає даних для оцінки.» |
 
 ## Appendix B — Weather icon mapping (FR-FORECAST-08)
 
@@ -298,3 +300,11 @@ Also added from the gap analysis: FR-SHELL-04, FR-SEARCH-07, FR-LOC-01/02, FR-FO
 | TC-RUNTIME-01 | Added: Node.js 22 (≥ 22.12) everywhere | Vitest 5 needs Node ≥ 22.12; the proposal pinned it without a PRD row |
 | TC-PURE-01, TC-DEPLOY-01 | Status → accepted; TC-DEPLOY-01 also names production from `main` | Implemented by `setup-engineering-foundation` |
 | TC-RUNTIME-01 (later the same day) | Node.js 22 → 24 | The owner's machine and CI run Node 24 (npm 11); keeping 22 caused an engine mismatch and a lockfile npm 11 rejected |
+
+### 2026-11-23 — comfort score with missing data (CodeRabbit review of PR #1, owner-approved)
+
+| Item | Change | Why |
+| --- | --- | --- |
+| FR-COMFORT-01 | `value` may be `null` | A day with no data must not look comfortable |
+| FR-COMFORT-09 | Added: no score when all inputs are missing; neutral «Немає даних» badge; no weekend verdict if either weekend day has no score | Previously all-missing input scored 100 ("ideal") |
+| Appendix A | Missing-input rule, weekend rule and a «Немає даних» reference case | Acceptance tests for the new behaviour |

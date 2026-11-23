@@ -1,7 +1,7 @@
 # Implementation roadmap — Weather Explorer
 
 > **Status: agreed (2026-11-23).** Built on [capabilities.md](capabilities.md). **All 16 decisions are resolved** (demo-scale choices; see [Decisions](#decisions) and the PRD change log). Nothing blocks M0.
-> Each slice below is meant to become **one OpenSpec change** (spec → tasks → implement → verify → archive). No proposals exist yet.
+> Each slice below is meant to become **one OpenSpec change** (spec → tasks → implement → verify → archive). Created so far: `setup-engineering-foundation` (M0 foundation).
 
 ## Principles
 
@@ -86,7 +86,7 @@ flowchart LR
 | **Goal** | On the preview URL: type «Львів», pick it, the URL updates, and 7 day cards from real data appear. Sharing the URL reproduces the view. |
 | **Capabilities** | `active-location`, `forecast` (data + DayCards), `city-search` (basic) |
 | **Requirements** | FR-SEARCH-01, 02, 03, 05; FR-LOC-01, 02; FR-FORECAST-01, 02, 05, 08; TC-DATA-01; TC-STACK-03, 06; NFR-COST-01; NFR-API-01 |
-| **Work** | URL parse and validate. A server-side Open-Meteo forecast fetch with `timezone=auto`, requesting **all fields later tracks need** (daily, hourly 48 h, current, sunrise/sunset), so M3 tracks don't each edit the fetch. A geocoding proxy route. DayCards with the WMO → Lucide icon mapping (PRD Appendix B). Streaming with Suspense so the shell isn't held up by Open-Meteo (NFR-PERF-01). |
+| **Work** | URL parse and validate. A server-side Open-Meteo forecast fetch with `timezone=auto`, requesting **all fields later tracks need** (daily for 8 days; hourly `temperature_2m` and `cloud_cover` for the same 8 days, because the comfort score needs each day's 09:00–18:00 cloud cover per FR-COMFORT-02; current conditions; sunrise/sunset), so M3 tracks don't each edit the fetch. The hourly chart shows only the first 48 h of that data (FR-FORECAST-03). A geocoding proxy route. DayCards with the WMO → Lucide icon mapping (PRD Appendix B). Streaming with Suspense so the shell isn't held up by Open-Meteo (NFR-PERF-01). |
 | **Exit** | E2E recording of search → URL → cards. Zero-results Notice. Invalid URL params handled. Console silent. Network log shows no third-party calls from the browser except map tiles (later). |
 | **Decided** | D8 caching, D12 icons, D14 URL precision, D16 Open-Meteo terms |
 

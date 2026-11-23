@@ -2,7 +2,7 @@
 
 > **Status: agreed (2026-11-23).** Analysis of `docs/requirements.md` (PRD, updated 2026-11-23) and `docs/product-brief.md`, checked against `DESIGN.md`, `docs/design-system/` and the code already in the repo.
 > **2026-11-23:** the contradictions in §6 were fixed, and all 16 decisions (D1–D16) are resolved — see [implementation-roadmap.md](implementation-roadmap.md#decisions) and the PRD change log. The missing requirements in §5 are now PRD rows.
-> Next step after sign-off: one OpenSpec change per roadmap slice. No proposals exist yet.
+> Next step after sign-off: one OpenSpec change per roadmap slice. The first, `setup-engineering-foundation`, exists in `openspec/changes/`; don't recreate it.
 
 ## 1. Capability map
 
@@ -30,7 +30,7 @@ Twelve capabilities. Ten carry the PRD's capability names. Two are proposed spli
 
 ### 0 · `engineering-foundation`
 - **Purpose:** make every later change verifiable and demonstrable.
-- **Scope:** Vitest and an `npm test` script (none exist yet). `npm run verify` under 60 s (NFR-DX-01), run by CI on every PR (NFR-DX-02), with a Fallow gate (NFR-DX-03). Node 22 pinned (TC-RUNTIME-01). A Vercel project with a preview URL per PR (TC-DEPLOY-01). OpenSpec change: `setup-engineering-foundation`.
+- **Scope:** Vitest and an `npm test` script (none exist yet). `npm run verify` under 60 s (NFR-DX-01), run by CI on every PR (NFR-DX-02), with a Fallow gate (NFR-DX-03). Node 24 pinned (TC-RUNTIME-01). A Vercel project with a preview URL per PR (TC-DEPLOY-01). OpenSpec change: `setup-engineering-foundation`.
 - **Not here:** Open-Meteo fixtures belong to `define-forecast-contract` (they need its types). NFR-OBS-01 (console silence) is checked by every UI change on its preview and audited in M5; the foundation only adds the preview where it's checked.
 - **Provides:** the test runner, the `verify` command, the CI check and the preview URL that every other capability verifies against.
 
@@ -225,3 +225,20 @@ Every PRD ID mapped to the capability that owns it (✱ = cross-cutting, verifie
 | FR-COMFORT-05 | weekend-highlight | | | |
 | FR-ANIM-01 … 04 | animated-bg | | | |
 | FR-COMPARE-01 … 03 | weekend-compare | | | |
+
+Added with the 2026-11-23 decisions:
+
+| Requirement | Owner |
+| --- | --- |
+| FR-SHELL-04 | app-shell |
+| FR-CLOCK-02 | top-clock |
+| FR-SEARCH-07 | city-search |
+| FR-LOC-01, FR-LOC-02 | active-location |
+| FR-FORECAST-06, 07, 08 | forecast |
+| FR-COMFORT-06, 08 | weekend-highlight |
+| FR-COMFORT-07, FR-COMFORT-09 | comfort-score (weekend part: weekend-highlight) |
+| FR-COMPARE-04 | weekend-compare |
+| FR-JOKES-02 | bottom-jokes |
+| NFR-API-01 | forecast, city-search ✱ |
+| TC-STACK-06 | forecast (icons) |
+| BC-BRAND-03 | every UI capability ✱ |

@@ -41,6 +41,7 @@ Breaking any of these is a bug, not a style choice.
 - `accent` / `accent-soft` / `accent-ink` belong **only to the weekend**: WeekendHighlight, the Sat/Sun day-card top rule and weekday, «Найкращий вибір» in CompareTable. Nothing else.
 - Text pairs: `ink`, `ink-muted` on any surface; `ink-subtle` on `surface` / `surface-raised` only (fails on `surface-sunken`).
 - Comfort uses exactly three fills, always with number **and** word — use `<ComfortBadge>`, never a coloured dot.
+- No data (FR-COMFORT-09): a neutral «Немає даних» badge on `surface-sunken` with `ink-muted` text and a `line-strong` hairline. Never a comfort colour, never a number.
 - `danger` is text + icon only. Never a red fill or banner.
 - `line` is decorative; borders that bound a control use `line-strong`.
 

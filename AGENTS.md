@@ -52,11 +52,13 @@ Use Node.js 24 (see `.nvmrc`; `nvm use`) and npm ≥ 11.21 (`npm install -g npm@
 - `npm run health` — Fallow gate: dead code, unused or unlisted dependencies, unresolved imports, cycles (NFR-DX-03).
 - `npm run build` — production build.
 - For UI changes, also check `/design-system` (plus the page you changed) in light **and** dark at 390px and 1280px, with no console errors and no requests to hosts other than the app's own.
-- Full code health, advisory: `npx fallow` adds duplication and complexity to the gate's checks. In Claude Code it runs automatically after every Edit/Write via `.claude/hooks/fallow-post-edit.sh` (wired in `.claude/settings.json`); findings come back to you — fix the ones your change caused, re-run `npx fallow`, and suppress intentional ones with a `fallow-ignore` comment plus a reason. Other agents: run it yourself before calling work done. Config is `.fallowrc.json` (comments allowed): the design-system export is excluded, the `components/design-system` barrel is treated as public API, and the few design-system exports kept for upcoming features are listed there with a reason — remove an entry once the export is used. Don't add ignores to silence a finding — fix it, or use a `fallow-ignore` comment with a reason.
+- Full code health, advisory: `npx fallow` adds duplication and complexity to the gate's checks. In Claude Code it runs automatically after every Edit/Write via `.claude/hooks/fallow-post-edit.sh` (wired in `.claude/settings.json`); findings come back to you — fix the ones your change caused, re-run `npx fallow`, and suppress intentional ones with a `fallow-ignore` comment plus a reason. Other agents: run it yourself before calling work done. Config is `.fallowrc.jsonc` (JSON with comments): the design-system export is excluded, the `components/design-system` barrel is treated as public API, and the few design-system exports kept for upcoming features are listed there with a reason — remove an entry once the export is used. Don't add ignores to silence a finding — fix it, or use a `fallow-ignore` comment with a reason.
 
 ## Deployments
 
-Vercel, through its Git integration (TC-DEPLOY-01). No environment variables or secrets are needed (NFR-COST-01).
+> **Status: planned, not connected yet.** The Vercel project doesn't exist until the owner imports the repo (tasks 6.1–6.3 of `setup-engineering-foundation`, deferred until the app has something to demo). Until then there are no preview or production URLs, and verification relies on CI and local runs.
+
+Vercel, through its Git integration (TC-DEPLOY-01). No environment variables or secrets are needed (NFR-COST-01). Once connected:
 
 - **Previews:** every pull request to `main` gets one. The link is in the PR's Vercel deployment status, and a new commit produces a new preview.
 - **Production:** every commit on `main` deploys to _production URL — added after the first merge_. A failed build leaves the previous production deployment live.
