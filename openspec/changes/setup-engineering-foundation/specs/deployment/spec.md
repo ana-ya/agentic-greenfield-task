@@ -7,7 +7,7 @@ Defines how the application reaches the web: a preview for every pull request, p
 ## ADDED Requirements
 
 ### Requirement: Preview deployment per pull request
-Every pull request SHALL get its own deployed preview, built from the pull request's latest commit, with the preview URL linked from the pull request. A new commit SHALL produce a new preview. (TC-DEPLOY-01)
+Every pull request to `main` SHALL get its own deployed preview, built from the pull request's latest commit, with the preview URL linked from the pull request. A new commit SHALL produce a new preview. (TC-DEPLOY-01)
 
 #### Scenario: Pull request gets a preview
 - **WHEN** a pull request is opened against `main`
@@ -24,11 +24,16 @@ Every pull request SHALL get its own deployed preview, built from the pull reque
 - **THEN** the pull request shows a failed deployment status and no new preview URL is published for that commit
 
 ### Requirement: Production deployment from main
-Every commit that lands on `main` SHALL be deployed to the stable production URL. (TC-DEPLOY-01)
+Every commit that lands on `main` SHALL be deployed to the stable production URL. A failed production build SHALL leave the previous production deployment serving. (TC-DEPLOY-01)
 
 #### Scenario: Merge deploys to production
 - **WHEN** a pull request is merged into `main`
 - **THEN** the production URL serves the merged commit once its deployment finishes
+
+#### Scenario: Failed production build keeps the last good version
+- **GIVEN** a commit on `main` whose production build fails
+- **WHEN** the deployment finishes with an error
+- **THEN** the production URL still serves the previous successful deployment
 
 ### Requirement: Public access to deployments
 Preview and production URLs SHALL be viewable by anyone with the link, without signing in to the hosting provider or any other account. (BC-DEMO-01)
@@ -49,10 +54,3 @@ Building and running a deployment SHALL require no API keys, tokens or other sec
 - **GIVEN** a hosting project with no environment variables defined
 - **WHEN** a deployment is built from `main`
 - **THEN** the build succeeds and the deployed home page loads
-
-### Requirement: Deployments use the pinned runtime
-Deployments SHALL build and run on the Node.js major version declared by the repository (22).
-
-#### Scenario: Build log shows Node.js 22
-- **WHEN** a deployment build runs
-- **THEN** its build log reports Node.js version 22.x

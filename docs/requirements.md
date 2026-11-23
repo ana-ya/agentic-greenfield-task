@@ -128,7 +128,9 @@ Status values: `proposed` · `accepted` · `shipped` · `dropped`.
 | NFR-A11Y-02   | Color palette meets WCAG AA contrast ratio across both light and dark themes                                          | proposed   |
 | NFR-COST-01   | Zero paid API keys; all third-party data is keyless or free-tier                                                       | proposed   |
 | NFR-OBS-01    | Console is silent at runtime (no warnings, no errors) on a healthy session                                             | proposed   |
-| NFR-DX-01     | `npm run lint && tsc --noEmit && npm test && npm run build` finish in < 60 s on a clean checkout                       | proposed   |
+| NFR-DX-01 | `npm run verify` (lint, typecheck, unit tests, code-health gate, production build) finishes in < 60 s on a clean checkout with dependencies installed (install time not counted, no build cache), measured on the CI runner | accepted |
+| NFR-DX-02 | Every push to a pull request and to `main` runs `npm run verify` in CI on a clean machine, with no secrets; the result is shown on the pull request | accepted |
+| NFR-DX-03 | The code-health gate (Fallow) fails verification on dead code, unused or unlisted dependencies, unresolved imports and circular imports; duplication and complexity stay advisory (full `npx fallow` run and the post-edit hook) | accepted |
 | NFR-I18N-01 | Product UI strings centralised in `lib/i18n/uk.ts`; `lib/i18n/en.ts` has the same keys (type-checked) as the English fallback. The locale is fixed to `uk`; no runtime i18n library and no language switch in MVP | proposed |
 | NFR-API-01 | Stay within the Open-Meteo free tier (non-commercial; < 10,000 calls/day, < 5,000/hour, < 600/min) through the server caches in FR-FORECAST-05; credit Open-Meteo (CC BY 4.0) in the footer | proposed |
 
@@ -142,11 +144,12 @@ Status values: `proposed` · `accepted` · `shipped` · `dropped`.
 | TC-STACK-04   | Leaflet + react-leaflet for maps; OSM raster tiles only                                                                                | accepted   |
 | TC-STACK-05 | Vitest for unit tests on `lib/`; no Playwright — end-to-end evidence is a `chrome-devtools` MCP recording per milestone | accepted |
 | TC-STACK-06 | Weather icons from `lucide-react` (tree-shaken, stroke width 1.75, `currentColor`) | proposed |
-| TC-DEPLOY-01  | Vercel for hosting; preview URL per PR via Git integration                                                                             | proposed   |
+| TC-DEPLOY-01 | Vercel for hosting via its Git integration: a preview URL per pull request, production from `main` | accepted |
+| TC-RUNTIME-01 | Node.js 22 (≥ 22.12) for local work, CI and hosting, declared in `.nvmrc` and `package.json` `engines` | accepted |
 | TC-DATA-01    | All Open-Meteo calls happen from Server Components or Route Handlers when possible; never expose Open-Meteo URLs in the client bundle in a way that suggests they require keys | proposed   |
 | TC-MAP-01     | OSM tiles include attribution; respect Tile Usage Policy (HTTPS, no scraping, valid Referer)                                          | proposed   |
 | TC-GEO-01 | Nominatim (reverse geocoding only, never search autocomplete) is called from a Route Handler, never the browser; app-wide ≤ 1 request/s; identifying User-Agent; responses cached; OSM attribution shown; an environment switch turns it off without a code change (coordinates label fallback) — per the [Nominatim Usage Policy](https://operations.osmfoundation.org/policies/nominatim/) | proposed |
-| TC-PURE-01    | `lib/` is framework-free: no `next/*`, no `react`, no DOM globals — enables 100% unit-testability                                       | proposed   |
+| TC-PURE-01 | `lib/` is framework-free: no `next/*`, no `react`, no DOM globals — enables 100% unit-testability | accepted |
 
 ## Business / UX constraints
 
@@ -284,3 +287,13 @@ From the capability analysis (`docs/capabilities.md` §6). Where a choice was ne
 | D16 Open-Meteo terms | Non-commercial demo fits the free tier; caching keeps calls low; CC BY 4.0 credit | NFR-API-01 |
 
 Also added from the gap analysis: FR-SHELL-04, FR-SEARCH-07, FR-LOC-01/02, FR-FORECAST-06/07, BC-BRAND-03.
+
+### 2026-11-23 — accepted with the `setup-engineering-foundation` proposal
+
+| Item | Change | Why |
+| --- | --- | --- |
+| NFR-DX-01 | Measured command is now `npm run verify` (adds the code-health gate); "clean checkout" defined as installed dependencies, no build cache, on the CI runner; status → accepted | Review of the proposal: the budget must name exactly what is measured |
+| NFR-DX-02 | Added: CI runs verify on every PR and push to `main` | The proposal's CI gate had no PRD row (maker ≠ checker) |
+| NFR-DX-03 | Added: Fallow gate scope | The proposal's code-health gate had no PRD row; scope limited to deterministic findings |
+| TC-RUNTIME-01 | Added: Node.js 22 (≥ 22.12) everywhere | Vitest 5 needs Node ≥ 22.12; the proposal pinned it without a PRD row |
+| TC-PURE-01, TC-DEPLOY-01 | Status → accepted; TC-DEPLOY-01 also names production from `main` | Implemented by `setup-engineering-foundation` |

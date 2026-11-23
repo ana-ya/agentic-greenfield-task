@@ -2,17 +2,22 @@
 
 ## Purpose
 
-Defines how a change to this repository is verified: which commands exist, what they check, how they fail and how fast they run. It also covers how framework-free domain code is enforced and how every pull request gets an independent check.
+Defines how a change to this repository is verified: which commands exist, what they check, how they fail, how fast they run and which runtime they need. It also covers how framework-free domain code is enforced and how every pull request gets an independent check.
 
 ## ADDED Requirements
 
 ### Requirement: Single verification command
-The repository SHALL provide one command, `npm run verify`, that runs in this order: lint, typecheck, unit tests, code-health analysis, production build. It SHALL stop at the first failing step and exit non-zero, and exit zero only when every step passes. (NFR-DX-01)
+The repository SHALL provide one command, `npm run verify`, that runs in this order: lint, typecheck, unit tests, code-health gate, production build. It SHALL stop at the first failing step and exit non-zero, and exit zero only when every step passes. (NFR-DX-01)
 
 #### Scenario: Clean tree passes
 - **GIVEN** a checkout of `main` with dependencies installed
 - **WHEN** `npm run verify` is run
 - **THEN** all five steps run in order and the command exits with code 0
+
+#### Scenario: Lint error stops verification first
+- **GIVEN** a source file with a lint error
+- **WHEN** `npm run verify` is run
+- **THEN** the lint step reports the file and rule, the command exits non-zero, and no later step runs
 
 #### Scenario: Type error stops verification
 - **GIVEN** a source file containing a TypeScript type error
@@ -22,15 +27,20 @@ The repository SHALL provide one command, `npm run verify`, that runs in this or
 #### Scenario: Failing unit test stops verification
 - **GIVEN** a unit test whose assertion fails
 - **WHEN** `npm run verify` is run
-- **THEN** the command exits non-zero after the unit-test step, and the build step does not run
+- **THEN** the command exits non-zero after the unit-test step, and the code-health and build steps do not run
+
+#### Scenario: Build failure fails verification
+- **GIVEN** code that passes lint, typecheck, tests and the code-health gate but fails the production build
+- **WHEN** `npm run verify` is run
+- **THEN** the build step reports the error and the command exits non-zero
 
 ### Requirement: Verification time budget
-On a clean checkout with dependencies installed and no build cache, `npm run verify` SHALL finish in under 60 seconds on the CI runner. (NFR-DX-01)
+On a clean checkout with dependencies installed (install time not counted) and no build cache, `npm run verify` SHALL finish in under 60 seconds on the CI runner. The duration SHALL be visible as its own step in every CI run. Exceeding the budget is a requirement failure to fix, even though the job doesn't fail automatically. (NFR-DX-01)
 
 #### Scenario: Cold run within budget
 - **GIVEN** a CI run on a fresh runner after `npm ci`, with no `.next` directory
 - **WHEN** the `npm run verify` step completes
-- **THEN** its recorded duration in the CI log is below 60 seconds
+- **THEN** that step's recorded duration in the CI log is below 60 seconds
 
 ### Requirement: Unit test command
 `npm test` SHALL run every unit test once, without watching or prompting. It SHALL exit zero when all tests pass and non-zero when any test fails, naming the failing test file and test. (TC-STACK-05)
@@ -44,17 +54,10 @@ On a clean checkout with dependencies installed and no build cache, `npm run ver
 - **WHEN** `npm test` is run
 - **THEN** the output names that test's file and title, and the command exits non-zero
 
-### Requirement: Coverage report
-`npm run test:coverage` SHALL run the unit tests and write a machine-readable coverage report for the domain code in `lib/` to `coverage/coverage-final.json`. The report SHALL NOT be committed to the repository.
-
-#### Scenario: Report is produced
-- **WHEN** `npm run test:coverage` is run
-- **THEN** `coverage/coverage-final.json` exists and lists the source files under `lib/`, and `git status` does not show the `coverage/` directory
-
 ### Requirement: Domain code stays framework-free at lint time
-Lint SHALL report an error, citing TC-PURE-01, for any file under `lib/` that imports `react`, `react-dom`, `next` or any of their subpaths, or that reads the browser globals `window`, `document`, `navigator`, `localStorage`, `sessionStorage` or `location`. The same code outside `lib/` SHALL NOT be reported by this rule. (TC-PURE-01)
+Lint SHALL report an error, citing TC-PURE-01, for any file under `lib/` that imports `react`, `react-dom`, `next` or any of their subpaths (static `import`, dynamic `import()` or `require()`), or that reads the browser globals `window`, `document`, `navigator`, `localStorage`, `sessionStorage` or `location`. The same code outside `lib/` SHALL NOT be reported by this rule. (TC-PURE-01)
 
-#### Scenario: Framework import in lib is rejected
+#### Scenario: Static framework import in lib is rejected
 - **GIVEN** a file under `lib/` containing `import { useState } from "react"`
 - **WHEN** `npm run lint` is run
 - **THEN** lint reports an error for that line whose message mentions TC-PURE-01, and exits non-zero
@@ -63,6 +66,11 @@ Lint SHALL report an error, citing TC-PURE-01, for any file under `lib/` that im
 - **GIVEN** a file under `lib/` importing from `next/navigation`
 - **WHEN** `npm run lint` is run
 - **THEN** lint reports a TC-PURE-01 error for that import
+
+#### Scenario: Dynamic framework import in lib is rejected
+- **GIVEN** a file under `lib/` containing `await import("react")`
+- **WHEN** `npm run lint` is run
+- **THEN** lint reports a TC-PURE-01 error for that expression
 
 #### Scenario: Browser global in lib is rejected
 - **GIVEN** a file under `lib/` that reads `window.innerWidth`
@@ -78,37 +86,50 @@ Lint SHALL report an error, citing TC-PURE-01, for any file under `lib/` that im
 Unit tests SHALL run in a plain Node.js environment with no DOM, so domain code that touches browser APIs fails its tests even if lint is bypassed. (TC-PURE-01)
 
 #### Scenario: DOM is unavailable in tests
-- **GIVEN** a unit test that evaluates `typeof document`
+- **GIVEN** a unit test that evaluates `typeof document` and `typeof window`
 - **WHEN** `npm test` is run
-- **THEN** the value is `"undefined"`
+- **THEN** both values are `"undefined"`
 
 ### Requirement: Code-health gate
-`npm run verify` SHALL include a code-health analysis of the whole project (dead code, unused dependencies, circular imports, duplication, complexity) using the project's committed configuration. Any reported issue SHALL fail verification. Intentional exceptions SHALL be recorded in the committed configuration or as inline suppressions with a reason.
+`npm run verify` SHALL include a whole-project code-health gate, using the committed configuration, that fails on dead code (unused files, exports, types), unused or unlisted dependencies, unresolved imports and circular imports. Duplication and complexity SHALL NOT fail the gate. Intentional exceptions SHALL be recorded in the committed configuration or as inline suppressions with a reason. (NFR-DX-03)
 
 #### Scenario: Unused export fails verification
 - **GIVEN** a new exported function under `lib/` that nothing imports
 - **WHEN** `npm run verify` is run
-- **THEN** the code-health step reports the unused export with its file and line, and the command exits non-zero before the build step
+- **THEN** the code-health step names the export with its file and line, and the command exits non-zero before the build step
+
+#### Scenario: Unused dependency fails verification
+- **GIVEN** a package added to `devDependencies` that nothing uses and the configuration doesn't exempt
+- **WHEN** the code-health step runs
+- **THEN** it names the package and exits non-zero
+
+#### Scenario: Duplication alone does not fail
+- **GIVEN** two functions with identical bodies in different files and no dead code
+- **WHEN** the code-health step runs
+- **THEN** it exits with code 0
 
 #### Scenario: Clean project passes the gate
-- **GIVEN** the project with no unsuppressed findings
+- **GIVEN** the project with no unsuppressed dead-code or dependency findings
 - **WHEN** the code-health step runs
 - **THEN** it exits with code 0
 
 ### Requirement: Pinned Node.js runtime
-The repository SHALL declare Node.js 22 (at least 22.12) as its runtime in a version file read by version managers and CI and in `package.json` `engines`. Local work, CI and hosting SHALL use that major version.
+The repository SHALL declare Node.js 22 (at least 22.12) in a version file read by version managers and CI and in `package.json` `engines`. Local work, CI and hosting SHALL use that major version. (TC-RUNTIME-01)
+
+#### Scenario: Declarations agree
+- **WHEN** the version file and `package.json` `engines` are inspected
+- **THEN** the version file names major 22, and `engines.node` accepts 22.12 and later 22.x releases but not 20.x or 23.x
 
 #### Scenario: CI uses the declared version
 - **WHEN** the CI verification job runs
 - **THEN** its log shows Node.js `v22.x` with x ≥ 12
 
-#### Scenario: Unsupported version is flagged locally
-- **GIVEN** a developer machine running Node.js 20
-- **WHEN** `npm ci` is run
-- **THEN** npm prints an engine warning naming the required Node.js version
+#### Scenario: Hosting uses the declared version
+- **WHEN** a deployment build runs
+- **THEN** its build log reports Node.js version 22.x
 
 ### Requirement: Independent verification of every pull request
-Every push to a pull request branch and every push to `main` SHALL trigger a CI job that installs dependencies from the lockfile on a clean runner and runs `npm run verify`. The job SHALL need no secrets, and its pass/fail status SHALL be shown on the pull request. A newer push to the same branch SHALL cancel an older running job.
+Every push to a pull request branch and every push to `main` SHALL trigger a CI job that installs dependencies from the lockfile on a clean runner and runs `npm run verify`. The job SHALL need no secrets, have read-only repository permissions, cancel an older run for the same branch, stop after at most 10 minutes, and show its pass/fail status on the pull request. (NFR-DX-02)
 
 #### Scenario: Passing pull request
 - **GIVEN** a pull request whose head commit passes `npm run verify`
@@ -120,11 +141,11 @@ Every push to a pull request branch and every push to `main` SHALL trigger a CI 
 - **WHEN** the CI job finishes
 - **THEN** the pull request shows a failed verification check whose log names the failing test
 
-#### Scenario: Superseded run is cancelled
-- **GIVEN** a running CI job for a pull request branch
-- **WHEN** a new commit is pushed to the same branch
-- **THEN** the older job is cancelled and a new job runs for the new commit
+#### Scenario: Lockfile out of sync fails before verification
+- **GIVEN** a pull request where `package.json` lists a dependency that `package-lock.json` does not contain
+- **WHEN** the CI job runs
+- **THEN** the install step fails, the verification step does not run, and the pull request shows a failed check
 
-#### Scenario: No secrets needed
+#### Scenario: Workflow configuration is safe
 - **WHEN** the CI workflow definition is inspected
-- **THEN** it references no repository or organisation secrets, and its token permissions are read-only for repository contents
+- **THEN** it references no secrets, grants only read access to repository contents, groups runs per branch with cancellation of in-progress runs, and sets a job timeout of 10 minutes or less

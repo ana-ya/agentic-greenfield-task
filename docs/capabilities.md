@@ -10,7 +10,7 @@ Twelve capabilities. Ten carry the PRD's capability names. Two are proposed spli
 
 | # | Capability (spec id) | Requirements | In PRD as | Hard dependencies | Can start |
 | --- | --- | --- | --- | --- | --- |
-| 0 | `engineering-foundation` | NFR-DX-01, TC-STACK-05, TC-DEPLOY-01, TC-PURE-01, BC-DEMO-01, NFR-OBS-01 (gate) | cross-cutting | — | now |
+| 0 | `engineering-foundation` | NFR-DX-01, NFR-DX-02, NFR-DX-03, TC-STACK-05, TC-DEPLOY-01, TC-PURE-01, TC-RUNTIME-01, BC-DEMO-01 | cross-cutting | — | now |
 | 1 | `app-shell` | FR-SHELL-01 … 04, BC-BRAND-03, NFR-I18N-01, BC-BRAND-01, BC-BRAND-02, BC-PRIVACY-03 | implicit | 0 | now |
 | 2 | `active-location` | FR-SEARCH-03 (URL part), FR-LOC-01, FR-LOC-02; consumed by FR-MAP-03, FR-COMPARE-03, FR-SEARCH-06 | **new split** | 1 | after 1 |
 | 3 | `city-search` | FR-SEARCH-01, 02, 04, 05, 06, 07; BC-PRIVACY-02; TC-DATA-01; TC-STACK-03; TC-GEO-01 (naming a geolocation) | `city-search` | 2 | after 2 |
@@ -30,8 +30,9 @@ Twelve capabilities. Ten carry the PRD's capability names. Two are proposed spli
 
 ### 0 · `engineering-foundation`
 - **Purpose:** make every later change verifiable and demonstrable.
-- **Scope:** Vitest and an `npm test` script (none exist yet). A clean `lint && tsc && test && build` under 60 s (NFR-DX-01). A Vercel project with a preview URL per PR (TC-DEPLOY-01). Open-Meteo response fixtures for tests. A console-silence check in the verification checklist (NFR-OBS-01). The Fallow hook is already in place.
-- **Provides:** the test runner, fixtures and preview URL that every other capability verifies against.
+- **Scope:** Vitest and an `npm test` script (none exist yet). `npm run verify` under 60 s (NFR-DX-01), run by CI on every PR (NFR-DX-02), with a Fallow gate (NFR-DX-03). Node 22 pinned (TC-RUNTIME-01). A Vercel project with a preview URL per PR (TC-DEPLOY-01). OpenSpec change: `setup-engineering-foundation`.
+- **Not here:** Open-Meteo fixtures belong to `define-forecast-contract` (they need its types). NFR-OBS-01 (console silence) is checked by every UI change on its preview and audited in M5; the foundation only adds the preview where it's checked.
+- **Provides:** the test runner, the `verify` command, the CI check and the preview URL that every other capability verifies against.
 
 ### 1 · `app-shell`
 - **Purpose:** the frame every feature mounts into.
@@ -202,15 +203,15 @@ Every PRD ID mapped to the capability that owns it (✱ = cross-cutting, verifie
 | FR-CLOCK-01 | top-clock | | NFR-A11Y-01 | every UI capability ✱ |
 | FR-SEARCH-01 | city-search | | NFR-A11Y-02 | design system (done); verify per milestone ✱ |
 | FR-SEARCH-02 | city-search | | NFR-COST-01 | forecast, city-search, map ✱ |
-| FR-SEARCH-03 | active-location (+ city-search writes) | | NFR-OBS-01 | foundation (gate) ✱ |
-| FR-SEARCH-04 | city-search | | NFR-DX-01 | foundation |
+| FR-SEARCH-03 | active-location (+ city-search writes) | | NFR-OBS-01 | every UI capability (preview check); M5 audit ✱ |
+| FR-SEARCH-04 | city-search | | NFR-DX-01, 02, 03 | foundation |
 | FR-SEARCH-05 | city-search | | NFR-I18N-01 | app-shell |
 | FR-SEARCH-06 | city-search | | TC-GEO-01 | map, city-search |
 | FR-JOKES-01 | bottom-jokes | | TC-STACK-01, 02 | foundation |
 | FR-FORECAST-01 | forecast | | TC-STACK-03 | forecast, city-search, map |
 | FR-FORECAST-02 | forecast | | TC-STACK-04 | map |
 | FR-FORECAST-03 | hourly-chart | | TC-STACK-05 | foundation |
-| FR-FORECAST-04 | hourly-chart | | TC-DEPLOY-01 | foundation |
+| FR-FORECAST-04 | hourly-chart | | TC-DEPLOY-01, TC-RUNTIME-01 | foundation |
 | FR-FORECAST-05 | forecast | | TC-DATA-01 | forecast, city-search, map |
 | FR-MAP-01 | map | | TC-MAP-01 | map |
 | FR-MAP-02 | map | | TC-PURE-01 | foundation (lint rule), comfort-score, forecast model ✱ |
