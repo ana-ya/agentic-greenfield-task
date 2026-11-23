@@ -48,6 +48,7 @@ Status values: `proposed` · `accepted` · `shipped` · `dropped`.
 | FR-SEARCH-05 | If the geocoding API returns zero results, show «Нічого не знайдено» inline (Notice); no error toast | proposed |
 | FR-SEARCH-06 | A «Використати моє місцезнаходження» button reads the browser geolocation only when pressed (BC-PRIVACY-02); the position becomes the active location, named as in FR-MAP-03 | proposed |
 | FR-SEARCH-07 | If geolocation is denied, unavailable or takes longer than 10 s, show a calm inline Notice; search keeps working | proposed |
+| FR-SEARCH-08 | If the geocoding request fails or takes longer than 5 s, show an error Notice «Пошук зараз недоступний» inline; the forecast already on screen stays | proposed |
 
 ### Active location (capability `active-location`)
 
@@ -318,3 +319,9 @@ Also added from the gap analysis: FR-SHELL-04, FR-SEARCH-07, FR-LOC-01/02, FR-FO
 | --- | --- | --- |
 | NFR-DX-01, NFR-DX-02, NFR-DX-03, TC-STACK-05, TC-PURE-01, TC-RUNTIME-01 | Status → shipped | Implemented and verified: CI green, `npm run verify` 14 s on the CI runner |
 | TC-DEPLOY-01 | Stays accepted | Vercel setup moved to `weather-core` by the owner's decision |
+
+### 2026-11-24 — `weather-core` proposal
+
+| Item | Change | Why |
+| --- | --- | --- |
+| FR-SEARCH-08 | Added: calm search-failure state | The `city-search` spec needed a PRD row for it |

@@ -232,7 +232,7 @@ Added with the 2026-11-23 decisions:
 | --- | --- |
 | FR-SHELL-04 | app-shell |
 | FR-CLOCK-02 | top-clock |
-| FR-SEARCH-07 | city-search |
+| FR-SEARCH-07, FR-SEARCH-08 | city-search |
 | FR-LOC-01, FR-LOC-02 | active-location |
 | FR-FORECAST-06, 07, 08 | forecast |
 | FR-COMFORT-06, 08 | weekend-highlight |
