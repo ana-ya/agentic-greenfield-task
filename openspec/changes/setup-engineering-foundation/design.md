@@ -46,13 +46,14 @@ Every message starts with `TC-PURE-01:` and says what to do instead ("keep lib/ 
 
 ### D-3 · `verify` as a plain npm script chain, cheapest step first
 ```
-"typecheck": "tsc --noEmit",
+"typecheck": "next typegen && tsc --noEmit",
 "test": "vitest run",
 "test:watch": "vitest",
 "health": "fallow --only dead-code --fail-on-issues",
 "verify": "npm run lint && npm run typecheck && npm test && npm run health && npm run build"
 ```
 `&&` gives fail-fast in POSIX shells and `cmd`, with no task runner. The order runs from fast to slow, so common failures show up in seconds.
+- *Typecheck runs `next typegen` first* (found during apply): route types such as `LayoutProps` live in `.next/types`, which a clean checkout doesn't have, so plain `tsc --noEmit` fails in CI. `next typegen` writes them without a full build, as Next's CLI docs recommend for CI.
 - *Fallow scope (NFR-DX-03):* `--only dead-code` covers dead code, dependency findings, unresolved imports and cycles, all deterministic. `--fail-on-issues` makes every such finding fail. Duplication and complexity, which can be judgement calls, stay advisory: the post-edit hook and a manual `npx fallow` still show them.
 - *Config:* `vite` is installed only as Vitest's peer, so nothing imports it. Add it to `.fallowrc.json` `ignoreDependencies` with a reason. Test files are picked up through Fallow's Vitest support. If they're reported as unused files, add an `entry` pattern for `lib/**/*.test.ts` instead of ignoring them.
 - *Alternatives:* `npm-run-all`/`turbo` add a dependency for no gain. A Vercel `buildCommand` running verify would slow every deploy and mix "is it correct" with "ship it".

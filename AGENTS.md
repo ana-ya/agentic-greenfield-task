@@ -36,11 +36,28 @@ Product: one calm Ukrainian-first screen that says whether this weekend's trip i
 - `app/` — routes; `app/globals.css` (Tailwind + token mapping), `app/styles/wx-components.css` (component CSS)
 - `components/design-system/` — React design-system components and icons
 - `lib/` — `strings.ts` (all copy), `comfort.ts`, `format.ts`, `cx.ts`
+  - `lib/` is framework-free (TC-PURE-01): no React, no Next.js, no browser globals. Lint rejects them (`TC-PURE-01:` errors), and unit tests run without a DOM. Put anything that needs them in `components/` or `app/`.
+  - Unit tests sit next to their module as `*.test.ts` (Vitest, Node environment).
 - `docs/` — product docs and the design-system export
 
 ## Commands and verification
 
-- `npm run dev` — dev server; `npm run lint`; `npx tsc --noEmit`; `npm run build`.
-- Before you call a UI change done: lint, typecheck and build pass, and `/design-system` (plus the page you changed) looks right in light **and** dark at 390px and 1280px, with no console errors and no requests to hosts other than the app's own.
-- Code health: `npx fallow` (dead code, unused deps, cycles, duplication, complexity). In Claude Code it runs automatically after every Edit/Write via `.claude/hooks/fallow-post-edit.sh` (wired in `.claude/settings.json`); findings come back to you — fix the ones your change caused, re-run `npx fallow`, and suppress intentional ones with a `fallow-ignore` comment plus a reason. Other agents: run it yourself before calling work done. Config is `.fallowrc.json`: the design-system export and `types/` are excluded, and the `components/design-system` barrel is treated as public API. Don't add ignores to silence a finding — fix it, or use a `fallow-ignore` comment with a reason.
-- `types/` at the repo root is a stray committed copy of Next's generated types. It is excluded from `tsconfig.json` and eslint; don't import from it.
+Use Node.js 22 (≥ 22.12, see `.nvmrc`; `nvm use`).
+
+- **Definition of done: `npm run verify`.** It runs, stopping at the first failure: `lint` → `typecheck` → `test` → `health` → `build`. CI runs the same command on every pull request and push to `main` (`.github/workflows/verify.yml`), and it must stay under 60 s on a clean checkout (NFR-DX-01).
+- `npm run dev` — dev server.
+- `npm run lint` — ESLint, including the TC-PURE-01 rule for `lib/`.
+- `npm run typecheck` — `next typegen && tsc --noEmit` (route types such as `LayoutProps` are generated first, so it also works on a clean checkout).
+- `npm test` — unit tests once (Vitest); `npm run test:watch` while working.
+- `npm run health` — Fallow gate: dead code, unused or unlisted dependencies, unresolved imports, cycles (NFR-DX-03).
+- `npm run build` — production build.
+- For UI changes, also check `/design-system` (plus the page you changed) in light **and** dark at 390px and 1280px, with no console errors and no requests to hosts other than the app's own.
+- Full code health, advisory: `npx fallow` adds duplication and complexity to the gate's checks. In Claude Code it runs automatically after every Edit/Write via `.claude/hooks/fallow-post-edit.sh` (wired in `.claude/settings.json`); findings come back to you — fix the ones your change caused, re-run `npx fallow`, and suppress intentional ones with a `fallow-ignore` comment plus a reason. Other agents: run it yourself before calling work done. Config is `.fallowrc.json` (comments allowed): the design-system export is excluded, the `components/design-system` barrel is treated as public API, and the few design-system exports kept for upcoming features are listed there with a reason — remove an entry once the export is used. Don't add ignores to silence a finding — fix it, or use a `fallow-ignore` comment with a reason.
+
+## Deployments
+
+Vercel, through its Git integration (TC-DEPLOY-01). No environment variables or secrets are needed (NFR-COST-01).
+
+- **Previews:** every pull request to `main` gets one. The link is in the PR's Vercel deployment status, and a new commit produces a new preview.
+- **Production:** every commit on `main` deploys to _production URL — added after the first merge_. A failed build leaves the previous production deployment live.
+- **Demo rule (BC-DEMO-01):** every milestone demo uses a preview or production URL opened in a **private window**. It must load without any Vercel sign-in, and its console must stay silent (NFR-OBS-01). If a sign-in page appears, Deployment Protection has been switched back on for previews.
