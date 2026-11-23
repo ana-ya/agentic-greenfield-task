@@ -11,7 +11,7 @@ export interface ComfortLevel {
 }
 
 /** Ordered best → worst. Thresholds: 70–100 good, 40–69 fair, 0–39 poor. */
-export const COMFORT_LEVELS: readonly ComfortLevel[] = [
+const COMFORT_LEVELS: readonly ComfortLevel[] = [
   { min: 70, level: "good", word: strings.comfort.good },
   { min: 40, level: "fair", word: strings.comfort.fair },
   { min: 0, level: "poor", word: strings.comfort.poor },

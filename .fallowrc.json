@@ -1,0 +1,14 @@
+{
+  "$schema": "./node_modules/fallow/schema.json",
+  "ignorePatterns": [
+    "docs/design-system/**",
+    "types/**"
+  ],
+  "ignoreDependencies": [
+    "@tailwindcss/turbopack",
+    "fallow"
+  ],
+  "ignoreExports": [
+    { "file": "components/design-system/index.ts", "exports": ["*"] }
+  ]
+}

@@ -1,6 +1,5 @@
 import { hiLo } from "@/lib/format";
 import { strings } from "@/lib/strings";
-import { cx } from "@/lib/cx";
 import { ComfortBadge } from "./ComfortBadge";
 
 export const MAX_PINNED_CITIES = 3;
@@ -30,9 +29,27 @@ function dayCell(d: CompareDay) {
   return `${hiLo(d.hi, d.lo)} · ${Math.round(d.precip)}%`;
 }
 
+function CompareRow({ city, best }: { city: CompareCity; best: boolean }) {
+  return (
+    <tr className={best ? "wx-best" : undefined}>
+      <th scope="row">
+        {city.name}
+        {best ? <span className="wx-best-label">{strings.compare.best}</span> : null}
+      </th>
+      <td className="wx-num">{dayCell(city.sat)}</td>
+      <td className="wx-num">{dayCell(city.sun)}</td>
+      <td>
+        <ComfortBadge score={city.score} />
+      </td>
+    </tr>
+  );
+}
+
 /** Side-by-side weekend comparison. Below 720px the table scrolls; rows never become cards. */
 export function CompareTable({ cities, className }: CompareTableProps) {
   const rows = cities.toSorted((a, b) => b.score - a.score);
+  // «Найкращий вибір» only means something when there is more than one city.
+  const hasBest = rows.length > 1;
   return (
     <div className={className}>
       <div className="wx-chips">
@@ -57,19 +74,7 @@ export function CompareTable({ cities, className }: CompareTableProps) {
           </thead>
           <tbody>
             {rows.map((c, i) => (
-              <tr key={c.name} className={cx(i === 0 && rows.length > 1 && "wx-best")}>
-                <th scope="row">
-                  {c.name}
-                  {i === 0 && rows.length > 1 ? (
-                    <span className="wx-best-label">{strings.compare.best}</span>
-                  ) : null}
-                </th>
-                <td className="wx-num">{dayCell(c.sat)}</td>
-                <td className="wx-num">{dayCell(c.sun)}</td>
-                <td>
-                  <ComfortBadge score={c.score} />
-                </td>
-              </tr>
+              <CompareRow key={c.name} city={c} best={hasBest && i === 0} />
             ))}
           </tbody>
         </table>
