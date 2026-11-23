@@ -145,7 +145,7 @@ Status values: `proposed` · `accepted` · `shipped` · `dropped`.
 | TC-STACK-05 | Vitest for unit tests on `lib/`; no Playwright — end-to-end evidence is a `chrome-devtools` MCP recording per milestone | accepted |
 | TC-STACK-06 | Weather icons from `lucide-react` (tree-shaken, stroke width 1.75, `currentColor`) | proposed |
 | TC-DEPLOY-01 | Vercel for hosting via its Git integration: a preview URL per pull request, production from `main` | accepted |
-| TC-RUNTIME-01 | Node.js 22 (≥ 22.12) for local work, CI and hosting, declared in `.nvmrc` and `package.json` `engines` | accepted |
+| TC-RUNTIME-01 | Node.js 24 (LTS) for local work, CI and hosting, declared in `.nvmrc` and `package.json` `engines` | accepted |
 | TC-DATA-01    | All Open-Meteo calls happen from Server Components or Route Handlers when possible; never expose Open-Meteo URLs in the client bundle in a way that suggests they require keys | proposed   |
 | TC-MAP-01     | OSM tiles include attribution; respect Tile Usage Policy (HTTPS, no scraping, valid Referer)                                          | proposed   |
 | TC-GEO-01 | Nominatim (reverse geocoding only, never search autocomplete) is called from a Route Handler, never the browser; app-wide ≤ 1 request/s; identifying User-Agent; responses cached; OSM attribution shown; an environment switch turns it off without a code change (coordinates label fallback) — per the [Nominatim Usage Policy](https://operations.osmfoundation.org/policies/nominatim/) | proposed |
@@ -297,3 +297,4 @@ Also added from the gap analysis: FR-SHELL-04, FR-SEARCH-07, FR-LOC-01/02, FR-FO
 | NFR-DX-03 | Added: Fallow gate scope | The proposal's code-health gate had no PRD row; scope limited to deterministic findings |
 | TC-RUNTIME-01 | Added: Node.js 22 (≥ 22.12) everywhere | Vitest 5 needs Node ≥ 22.12; the proposal pinned it without a PRD row |
 | TC-PURE-01, TC-DEPLOY-01 | Status → accepted; TC-DEPLOY-01 also names production from `main` | Implemented by `setup-engineering-foundation` |
+| TC-RUNTIME-01 (later the same day) | Node.js 22 → 24 | The owner's machine and CI run Node 24 (npm 11); keeping 22 caused an engine mismatch and a lockfile npm 11 rejected |

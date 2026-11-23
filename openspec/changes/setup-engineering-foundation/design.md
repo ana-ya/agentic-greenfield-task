@@ -63,9 +63,9 @@ Triggers are `pull_request` and `push` to `main`, with `permissions: contents: r
 - *Why Actions:* the repo is on GitHub and the status shows natively on the PR. CodeRabbit is explicitly advisory, so it can't be the gate.
 - *Alternative:* rely on Vercel's build status. Rejected because it runs only `next build`.
 
-### D-5 · Node 22 pinned in `.nvmrc` and `engines`
-`.nvmrc` holds `22`. `package.json` gets `"engines": { "node": ">=22.12 <23" }`. Vercel reads the major version from `engines` and builds on 22.x. npm only warns on other versions (no `engine-strict`).
-- *Alternative:* `22.x` would accept 22.0–22.11, which Vitest 5 doesn't support. `>=22.12` alone would let Vercel pick a newer major than CI.
+### D-5 · Node 24 pinned in `.nvmrc` and `engines`
+`.nvmrc` holds `24`. `package.json` gets `"engines": { "node": "24.x" }`. Vercel reads the major version from `engines` and builds on 24.x. npm only warns on other versions (no `engine-strict`).
+- *Why 24, not 22:* first planned as 22 (≥ 22.12). During apply, the owner's machine turned out to run Node 24.10.0, and CI then failed: `.nvmrc` named 24, `engines` named 22, and npm 11 (bundled with Node 24) rejected a lockfile written by npm 10. Node 24 is the current LTS and supported by Vitest 5, Next.js 16 and Vercel, so everything moved to 24 and the lockfile is written with npm 11. It still installs with npm 10.
 
 ### D-6 · Vercel through its Git integration, zero configuration
 The owner imports the repo into Vercel with the Next.js preset defaults: production branch `main`, no environment variables. No `vercel.json` is needed. Preview Deployment Protection is switched off for this project so previews are public (BC-DEMO-01). Vercel keeps the last successful production deployment when a build fails, which is what the deployment spec expects. Creating the account and project is a manual owner step; agents don't create accounts.
@@ -103,7 +103,7 @@ These tests pin down what `lib/format.ts`, `lib/comfort.ts` and `lib/cx.ts` alre
 | A4 | Nothing depends on `types/`, so it can be deleted | Open: the owner confirms the deletion prompt in task 1.4 |
 | A5 | Fallow gate limited to deterministic findings | **Confirmed**: NFR-DX-03 |
 | A6 | Pull requests go from feature branches to `main` of `ana-ya/agentic-greenfield-task` (standalone repo, Actions on by default) | **Confirmed** by the owner |
-| A7 | The owner's machine runs Node 22.12 or later | Open: checked in task 1.1 |
+| A7 | The owner's machine runs Node 24 | **Confirmed**: the owner's Node is 24.10.0 (found during apply) |
 
 ## Open Questions
 

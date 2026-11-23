@@ -114,19 +114,19 @@ Unit tests SHALL run in a plain Node.js environment with no DOM, so domain code 
 - **THEN** it exits with code 0
 
 ### Requirement: Pinned Node.js runtime
-The repository SHALL declare Node.js 22 (at least 22.12) in a version file read by version managers and CI and in `package.json` `engines`. Local work, CI and hosting SHALL use that major version. (TC-RUNTIME-01)
+The repository SHALL declare Node.js 24 in a version file read by version managers and CI and in `package.json` `engines`. Local work, CI and hosting SHALL use that major version. (TC-RUNTIME-01)
 
 #### Scenario: Declarations agree
 - **WHEN** the version file and `package.json` `engines` are inspected
-- **THEN** the version file names major 22, and `engines.node` accepts 22.12 and later 22.x releases but not 20.x or 23.x
+- **THEN** the version file names major 24, and `engines.node` accepts 24.x but not 22.x or 25.x
 
 #### Scenario: CI uses the declared version
 - **WHEN** the CI verification job runs
-- **THEN** its log shows Node.js `v22.x` with x ≥ 12
+- **THEN** its log shows Node.js `v24.x`
 
 #### Scenario: Hosting uses the declared version
 - **WHEN** a deployment build runs
-- **THEN** its build log reports Node.js version 22.x
+- **THEN** its build log reports Node.js version 24.x
 
 ### Requirement: Independent verification of every pull request
 Every push to a pull request branch and every push to `main` SHALL trigger a CI job that installs dependencies from the lockfile on a clean runner and runs `npm run verify`. The job SHALL need no secrets, have read-only repository permissions, cancel an older run for the same branch, stop after at most 10 minutes, and show its pass/fail status on the pull request. (NFR-DX-02)

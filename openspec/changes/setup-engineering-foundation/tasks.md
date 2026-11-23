@@ -4,9 +4,9 @@ Tasks marked **[owner]** need the repository owner (account or settings access).
 
 ## 1. Runtime pin and repository hygiene
 
-- [ ] 1.1 Run `node -v` on the owner's machine; if it's below 22.12 or not 22.x, switch with a version manager (`nvm install 22 && nvm use 22`) first (design A7); verify `node -v` prints `v22.x` with x ≥ 12
-- [x] 1.2 Add `.nvmrc` containing `22` and `"engines": { "node": ">=22.12 <23" }` to `package.json`; verify by inspection that both declare major 22, and that `npx semver -r ">=22.12 <23" 22.12.0 22.20.0 20.18.0 23.1.0` prints only the two 22.x versions
-- [x] 1.3 Bump `@types/node` from `^20` to `^22` and reinstall; verify `npm ls @types/node` shows 22.x and `npx tsc --noEmit` passes
+- [x] 1.1 Run `node -v` on the owner's machine; verify it matches the pinned major — *Done during apply: the owner runs Node 24.10.0, so the pin moved from 22 to 24 (design D-5).*
+- [x] 1.2 Add `.nvmrc` containing `24` and `"engines": { "node": "24.x" }` to `package.json`; verify by inspection that both declare major 24, and that `npx semver -r "24.x" 24.10.0 22.20.0 25.0.0` prints only `24.10.0`
+- [x] 1.3 Bump `@types/node` from `^20` to `^24` (lockfile written with npm 11); verify `npm ls @types/node` shows 24.x, `npm ci` succeeds with both npm 10 and npm 11, and `npm run typecheck` passes
 - [x] 1.4 Add `.fallow/` to `.gitignore`; verify `git status --porcelain` no longer lists `.fallow/`
 - [x] 1.5 Delete the stray `types/` folder (only after the owner approves the deletion prompt, design A4) and remove its workarounds: `"types"` in `tsconfig.json` `exclude`, `"types/**"` in `eslint.config.mjs` ignores, and `"types/**"` in `.fallowrc.json` `ignorePatterns`; verify `npx tsc --noEmit`, `npm run lint` and `npx fallow --only dead-code` pass and `git grep -n "types/\*\*"` returns nothing
 
@@ -36,12 +36,12 @@ Tasks marked **[owner]** need the repository owner (account or settings access).
 ## 5. Continuous verification on pull requests (NFR-DX-02)
 
 - [x] 5.1 Add `.github/workflows/verify.yml` per design D-4 (`pull_request` + `push` to `main`; `permissions: contents: read`; `concurrency` per ref with `cancel-in-progress: true`; `timeout-minutes: 10`; `setup-node` from `.nvmrc` with npm cache; `npm ci`; `npm run verify` as its own step); verify by inspection against the "Workflow configuration is safe" scenario, and that `grep -n "secrets\." .github/workflows/verify.yml` returns nothing
-- [ ] 5.2 Open this change's PR to `main` and confirm the first CI run is green, its log shows Node `v22.x` (x ≥ 12), and the `npm run verify` step took under 60 s; if Fallow reports a missing `@fallow-cli/linux-x64-gnu`, add `@fallow-cli/linux-x64-gnu@3.47.0` to `optionalDependencies` and re-run (design Risks); record the duration in the PR
+- [ ] 5.2 Open this change's PR to `main` and confirm the first CI run is green, its log shows Node `v24.x`, and the `npm run verify` step took under 60 s; if Fallow reports a missing `@fallow-cli/linux-x64-gnu`, add `@fallow-cli/linux-x64-gnu@3.47.0` to `optionalDependencies` and re-run (design Risks); record the duration in the PR
 - [ ] 5.3 Prove the red paths on the PR, reverting each: push a failing test (check fails, log names the test); push a `package.json` dependency without updating the lockfile (install step fails, verify step doesn't run). Confirm the check turns green after each revert
 
 ## 6. Deployment (TC-DEPLOY-01, BC-DEMO-01)
 
-- [ ] 6.1 **[owner]** Import `ana-ya/agentic-greenfield-task` into Vercel (Next.js preset, production branch `main`, no environment variables); verify the first production build succeeds and its log shows Node 22.x
+- [ ] 6.1 **[owner]** Import `ana-ya/agentic-greenfield-task` into Vercel (Next.js preset, production branch `main`, no environment variables); verify the first production build succeeds and its log shows Node 24.x
 - [ ] 6.2 **[owner]** Turn off Deployment Protection for previews on this project (design D-6, assumption A2); verify a preview URL opens in a private window without a Vercel sign-in page
 - [ ] 6.3 On this change's PR, confirm: the Vercel status links a preview URL; a new commit produces a new preview; the preview's browser console has no errors or warnings on load (NFR-OBS-01 baseline for the placeholder page). Record the preview URL in the PR
 - [x] 6.4 Add a "Deployments" section to `AGENTS.md`: where previews appear (the PR's Vercel status), the rule that every milestone demo uses a preview opened in a private window, and a placeholder for the production URL; verify the section reads correctly
