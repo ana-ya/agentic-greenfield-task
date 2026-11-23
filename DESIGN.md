@@ -1,7 +1,7 @@
 # DESIGN.md — Weather Explorer
 
 How UI is built in this repo. Read this before touching anything visual.
-The design system itself lives in **`docs/design-system/`** (exported from Claude Design; `docs/Weather Explorer.zip` is the original export). This file says how it is wired into the app and which rules are non-negotiable. When this file and `docs/design-system/README.md` disagree, the design system wins — fix this file.
+The design system itself lives in **`docs/design-system/`** (exported from Claude Design; `docs/Weather Explorer.zip` is the original export). This file says how it is wired into the app and which rules are non-negotiable. When this file and `docs/design-system/README.md` disagree on visuals, the design system wins — fix this file. On product behaviour and copy rules, `docs/requirements.md` (the PRD) wins over both.
 
 ## The product in one line
 
@@ -31,6 +31,7 @@ Breaking any of these is a bug, not a style choice.
 - Ukrainian first; all strings come from `lib/strings.ts`. No string literals in JSX.
 - No exclamation marks. No emoji (the only exception: a country flag in a search suggestion). Sentence case.
 - Address the visitor with «ви» in instructions; prefer impersonal phrasing where natural («Нічого не знайдено»).
+- A comfort explanation is one sentence of at most 80 characters (FR-COMFORT-03).
 - Numbers carry units: `18°`, `40%`, `12 км/год`, `UV 6`, 24-hour time `06:42`. Celsius only. Hi/lo is `18° / 9°` (hi `ink`, lo `ink-muted`) — use `temp()` / `hiLo()`.
 - Failures are calm and specific: what happened + what still works. Use `<Notice>`; never a toast, never an error page, never `role="alert"`.
 
@@ -112,8 +113,9 @@ Keep these when re-syncing:
 2. **«Найкращий вибір»** — rendered from `lib/strings.ts` as `.wx-best-label`, not by CSS `::after`.
 3. **`weekday()` / `dayLabel()`** — take `"YYYY-MM-DD"` and use UTC; the export's `new Date(date).getDay()` shifts the day for visitors west of UTC.
 4. **ComfortBadge** — `role="img"` plus `aria-label`; `aria-label` on a bare `<span>` isn't reliably announced.
-5. **DayCard** — takes an `icon` node plus label instead of a WMO `code`, until the icon set is chosen (below).
+5. **DayCard** — takes an `icon` node plus label instead of a WMO `code` until the WMO → Lucide mapping (PRD Appendix B) is implemented.
 6. **WeekendHighlight** — takes structured `saturday` / `sunday` values plus dates; the export's props are pre-formatted strings.
+7. **Comfort explanation** — exactly one Ukrainian sentence, at most 80 characters (FR-COMFORT-03). The export's sample («Тепло й сухо, легкий вітер. Гарний день для прогулянки.») is two sentences; follow the PRD.
 
 ## Re-syncing after a design-system update
 
@@ -125,7 +127,7 @@ Keep these when re-syncing:
 
 ## Open decisions
 
-- **Weather icon set.** The system calls for one outline set (24px, 1.75px stroke, `currentColor`) mapped from WMO codes to ~12 glyphs, and suggests Lucide. Only 4 glyphs exist so far (`components/design-system/icons.tsx`, taken from the previews). Choose the set, add it under `assets/Icons/`, add the `code → { icon, label }` map, then switch DayCard back to `code`.
+- **Weather icon set — decided:** `lucide-react` (TC-STACK-06), 12 glyphs mapped from WMO codes in PRD Appendix B, stroke width 1.75, `currentColor`. Not installed yet: add it with the forecast change, then switch DayCard back to `code`. The 4 preview glyphs in `icons.tsx` go away then; the UI icons (search, location, info, alert) stay.
 - **CitySearch** is specified and styled (`wx-search` …) but not ported. It is behavioural (≈250 ms debounce, combobox keyboard model, `?lat=&lon=&name=` in the URL) and belongs with the search feature.
 - **Sky background, hourly chart, map** are specified in `docs/design-system/README.md` but have no component spec yet.
 - `display` is 48px with no mobile step, so the hero wraps on narrow screens. The system defines no smaller size; raise it there rather than inventing one here.

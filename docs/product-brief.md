@@ -49,22 +49,24 @@ they came to make.
    country, and an optional flag (FR-SEARCH-01/02). Selecting a suggestion sets
    the active location and reflects it in the URL as `?lat=&lon=&name=`, so the
    view is shareable (FR-SEARCH-03). Pressing Enter on a lone suggestion selects
-   it (FR-SEARCH-04). If nothing matches, an inline "Nothing found" appears —
+   it (FR-SEARCH-04). If nothing matches, an inline «Нічого не знайдено» appears —
    never an error toast (FR-SEARCH-05). Alternatively, the visitor clicks
    anywhere on the map to set the place by reverse-geocoding (FR-MAP-03).
-3. **Read the forecast.** Once a location is active, the app fetches a 7-day
-   daily forecast (FR-FORECAST-01) and renders seven day cards — weekday, hi/lo
+3. **Read the forecast.** Once a location is active, the app fetches the
+   forecast (FR-FORECAST-01) and renders seven day cards — weekday, hi/lo
    in °C, weather icon, precipitation probability, wind (FR-FORECAST-02). Below
    them, an hourly temperature line chart covers the next 48 hours
    (FR-FORECAST-03), with today's sunrise and sunset noted underneath
-   (FR-FORECAST-04). The last successful response is cached in memory until the
-   location changes (FR-FORECAST-05).
+   (FR-FORECAST-04). Forecasts are cached on the server for a few minutes, and
+   while a new place loads the previous forecast stays visible (FR-FORECAST-05).
 4. **Read the comfort scores.** Each day carries a 0–100 comfort score as a
-   colored badge — green, yellow, or red — derived from feels-like temperature,
+   badge showing the number and a word — «Комфортно», «Терпимо» or
+   «Некомфортно» — on a good, fair or poor fill, derived from feels-like temperature,
    precipitation probability, wind, cloud cover, and UV (FR-COMFORT-02/04). The
    score is computed by a pure, total function and explained in a single short
    Ukrainian sentence (FR-COMFORT-01/03). The **upcoming weekend** (Saturday +
-   Sunday average, by the location's local dates) is highlighted at the top of
+   Sunday average, by the location's local dates; on a Sunday it is next
+   weekend, FR-COMFORT-06) is highlighted at the top of
    the grid — the headline answer to "is it worth going?" (FR-COMFORT-05).
 5. **See it in place.** An interactive OpenStreetMap-tiled map is bounded to the
    current location, with a marker and a popup naming the city
