@@ -68,6 +68,7 @@ Triggers are `pull_request` and `push` to `main`, with `permissions: contents: r
 - *Why 24, not 22:* first planned as 22 (≥ 22.12). During apply, the owner's machine turned out to run Node 24.10.0, and CI then failed: `.nvmrc` named 24, `engines` named 22, and npm 11 (bundled with Node 24) rejected a lockfile written by npm 10. Node 24 is the current LTS and supported by Vitest 5, Next.js 16 and Vercel, so everything moved to 24 and the lockfile is written with npm 11. It still installs with npm 10.
 
 ### D-6 · Vercel through its Git integration, zero configuration
+*Moved to `weather-core` on 2026-11-24 (owner's decision) together with the `deployment` spec; kept here as the agreed approach.*
 The owner imports the repo into Vercel with the Next.js preset defaults: production branch `main`, no environment variables. No `vercel.json` is needed. Preview Deployment Protection is switched off for this project so previews are public (BC-DEMO-01). Vercel keeps the last successful production deployment when a build fails, which is what the deployment spec expects. Creating the account and project is a manual owner step; agents don't create accounts.
 
 ### D-7 · Remove `types/` instead of excluding it

@@ -130,9 +130,9 @@ Status values: `proposed` · `accepted` · `shipped` · `dropped`.
 | NFR-A11Y-02   | Color palette meets WCAG AA contrast ratio across both light and dark themes                                          | proposed   |
 | NFR-COST-01   | Zero paid API keys; all third-party data is keyless or free-tier                                                       | proposed   |
 | NFR-OBS-01    | Console is silent at runtime (no warnings, no errors) on a healthy session                                             | proposed   |
-| NFR-DX-01 | `npm run verify` (lint, typecheck, unit tests, code-health gate, production build) finishes in < 60 s on a clean checkout with dependencies installed (install time not counted, no build cache), measured on the CI runner | accepted |
-| NFR-DX-02 | Every push to a pull request and to `main` runs `npm run verify` in CI on a clean machine, with no secrets; the result is shown on the pull request | accepted |
-| NFR-DX-03 | The code-health gate (Fallow) fails verification on dead code, unused or unlisted dependencies, unresolved imports and circular imports; duplication and complexity stay advisory (full `npx fallow` run and the post-edit hook) | accepted |
+| NFR-DX-01 | `npm run verify` (lint, typecheck, unit tests, code-health gate, production build) finishes in < 60 s on a clean checkout with dependencies installed (install time not counted, no build cache), measured on the CI runner | shipped |
+| NFR-DX-02 | Every push to a pull request and to `main` runs `npm run verify` in CI on a clean machine, with no secrets; the result is shown on the pull request | shipped |
+| NFR-DX-03 | The code-health gate (Fallow) fails verification on dead code, unused or unlisted dependencies, unresolved imports and circular imports; duplication and complexity stay advisory (full `npx fallow` run and the post-edit hook) | shipped |
 | NFR-I18N-01 | Product UI strings centralised in `lib/i18n/uk.ts`; `lib/i18n/en.ts` has the same keys (type-checked) as the English fallback. The locale is fixed to `uk`; no runtime i18n library and no language switch in MVP | proposed |
 | NFR-API-01 | Stay within the Open-Meteo free tier (non-commercial; < 10,000 calls/day, < 5,000/hour, < 600/min) through the server caches in FR-FORECAST-05; credit Open-Meteo (CC BY 4.0) in the footer | proposed |
 
@@ -144,14 +144,14 @@ Status values: `proposed` · `accepted` · `shipped` · `dropped`.
 | TC-STACK-02 | Tailwind CSS 4 (via the `@tailwindcss/turbopack` loader) mapped to the design-system tokens; UI components are the design-system components in `components/design-system` (`wx-` classes); no shadcn/ui or class-variance-authority | accepted |
 | TC-STACK-03 | Open-Meteo APIs (forecast + forward geocoding); no other weather provider. Reverse geocoding, which Open-Meteo does not offer, uses OSM Nominatim under TC-GEO-01 | accepted |
 | TC-STACK-04   | Leaflet + react-leaflet for maps; OSM raster tiles only                                                                                | accepted   |
-| TC-STACK-05 | Vitest for unit tests on `lib/`; no Playwright — end-to-end evidence is a `chrome-devtools` MCP recording per milestone | accepted |
+| TC-STACK-05 | Vitest for unit tests on `lib/`; no Playwright — end-to-end evidence is a `chrome-devtools` MCP recording per milestone | shipped |
 | TC-STACK-06 | Weather icons from `lucide-react` (tree-shaken, stroke width 1.75, `currentColor`) | proposed |
 | TC-DEPLOY-01 | Vercel for hosting via its Git integration: a preview URL per pull request, production from `main` | accepted |
-| TC-RUNTIME-01 | Node.js 24 (LTS) for local work, CI and hosting, declared in `.nvmrc` and `package.json` `engines` | accepted |
+| TC-RUNTIME-01 | Node.js 24 (LTS) for local work, CI and hosting, declared in `.nvmrc` and `package.json` `engines` | shipped |
 | TC-DATA-01    | All Open-Meteo calls happen from Server Components or Route Handlers when possible; never expose Open-Meteo URLs in the client bundle in a way that suggests they require keys | proposed   |
 | TC-MAP-01     | OSM tiles include attribution; respect Tile Usage Policy (HTTPS, no scraping, valid Referer)                                          | proposed   |
 | TC-GEO-01 | Nominatim (reverse geocoding only, never search autocomplete) is called from a Route Handler, never the browser; app-wide ≤ 1 request/s; identifying User-Agent; responses cached; OSM attribution shown; an environment switch turns it off without a code change (coordinates label fallback) — per the [Nominatim Usage Policy](https://operations.osmfoundation.org/policies/nominatim/) | proposed |
-| TC-PURE-01 | `lib/` is framework-free: no `next/*`, no `react`, no DOM globals — enables 100% unit-testability | accepted |
+| TC-PURE-01 | `lib/` is framework-free: no `next/*`, no `react`, no DOM globals — enables 100% unit-testability | shipped |
 
 ## Business / UX constraints
 
@@ -311,3 +311,10 @@ Also added from the gap analysis: FR-SHELL-04, FR-SEARCH-07, FR-LOC-01/02, FR-FO
 | Appendix A | Missing-input rule, weekend rule and a «Немає даних» reference case | Acceptance tests for the new behaviour |
 | FR-COMFORT-09, Appendix A | "six inputs" → "five inputs" | FR-COMFORT-02 defines five inputs; cold and heat are two penalties on the same temperature input (CodeRabbit re-review) |
 | FR-COMPARE-05 | Added: unscored cities sort last, show «Немає даних», and «Найкращий вибір» needs at least two scored cities | Follows from FR-COMFORT-09: the comparison must not recommend without data (CodeRabbit re-review) |
+
+### 2026-11-24 — `setup-engineering-foundation` shipped (PR #1, merge `ade6fd3`)
+
+| Item | Change | Why |
+| --- | --- | --- |
+| NFR-DX-01, NFR-DX-02, NFR-DX-03, TC-STACK-05, TC-PURE-01, TC-RUNTIME-01 | Status → shipped | Implemented and verified: CI green, `npm run verify` 14 s on the CI runner |
+| TC-DEPLOY-01 | Stays accepted | Vercel setup moved to `weather-core` by the owner's decision |

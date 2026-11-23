@@ -56,7 +56,7 @@ Use Node.js 24 (see `.nvmrc`; `nvm use`) and npm ≥ 11.21 (`npm install -g npm@
 
 ## Deployments
 
-> **Status: planned, not connected yet.** The Vercel project doesn't exist until the owner imports the repo (tasks 6.1–6.3 of `setup-engineering-foundation`, deferred until the app has something to demo). Until then there are no preview or production URLs, and verification relies on CI and local runs.
+> **Status: planned, not connected yet.** The Vercel project doesn't exist until the owner imports the repo (part of the `weather-core` change, done once the app has something to demo). Until then there are no preview or production URLs, and verification relies on CI and local runs.
 
 Vercel, through its Git integration (TC-DEPLOY-01). No environment variables or secrets are needed (NFR-COST-01). Once connected:
 

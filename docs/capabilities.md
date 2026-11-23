@@ -2,7 +2,7 @@
 
 > **Status: agreed (2026-11-23).** Analysis of `docs/requirements.md` (PRD, updated 2026-11-23) and `docs/product-brief.md`, checked against `DESIGN.md`, `docs/design-system/` and the code already in the repo.
 > **2026-11-23:** the contradictions in §6 were fixed, and all 16 decisions (D1–D16) are resolved — see [implementation-roadmap.md](implementation-roadmap.md#decisions) and the PRD change log. The missing requirements in §5 are now PRD rows.
-> Next step after sign-off: one OpenSpec change per roadmap slice. The first, `setup-engineering-foundation`, exists in `openspec/changes/`; don't recreate it.
+> Next step after sign-off: one OpenSpec change per roadmap slice. The first, `setup-engineering-foundation`, is shipped and archived (`openspec/changes/archive/`); its `quality-gates` spec now lives in `openspec/specs/`. Next: `weather-core`.
 
 ## 1. Capability map
 
