@@ -78,6 +78,7 @@ These tests pin down what `lib/format.ts`, `lib/comfort.ts` and `lib/cx.ts` alre
 
 ## Risks / Trade-offs
 
+- **[Lockfile churn between npm versions]** *(found during apply)* npm 10 and npm 11.6 write the WebAssembly fallback packages' dependencies (`@emnapi/*`) differently, and npm 11.6 drops `@emnapi/runtime`. CI's newer npm then rejects the lockfile. → The lockfile is written with npm 11.21.3 and verified with `npm ci` on npm 10.9, 11.6 and 11.21. `engines.npm: ">=11.21"` warns on older npm, and AGENTS.md says to install with `npm ci`.
 - **[Fallow's native binary missing in CI]** The lockfile was written on macOS, and npm can drop other platforms' optional packages. Then `npm run health` fails with "Could not find @fallow-cli/linux-x64-gnu". → Decided fix: add `@fallow-cli/linux-x64-gnu@3.47.0` to `optionalDependencies` (it's skipped on macOS) and re-run.
 - **[New tooling trips the gate]** Fallow may flag `vite` (a peer only) or the test files. → Handled in D-3 and task 2.3. Verified by running the gate right after installing.
 - **[The 60 s budget grows with features]** `next build` dominates. → Every CI run records the duration, so the first change that breaks the budget is visible on its own PR.

@@ -42,7 +42,7 @@ Product: one calm Ukrainian-first screen that says whether this weekend's trip i
 
 ## Commands and verification
 
-Use Node.js 24 (see `.nvmrc`; `nvm use`).
+Use Node.js 24 (see `.nvmrc`; `nvm use`) and npm ≥ 11.21 (`npm install -g npm@11`; npm 12 needs Node ≥ 24.15). Older npm 11 drops WebAssembly-only entries from `package-lock.json`, and CI's `npm ci` then rejects it. Install with `npm ci`; run `npm install` only to change dependencies, and commit the lockfile it writes.
 
 - **Definition of done: `npm run verify`.** It runs, stopping at the first failure: `lint` → `typecheck` → `test` → `health` → `build`. CI runs the same command on every pull request and push to `main` (`.github/workflows/verify.yml`), and it must stay under 60 s on a clean checkout (NFR-DX-01).
 - `npm run dev` — dev server.
