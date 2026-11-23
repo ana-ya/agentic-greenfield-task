@@ -98,7 +98,7 @@ Status values: `proposed` · `accepted` · `shipped` · `dropped`.
 | FR-COMFORT-06 | "Upcoming weekend" by the place's local date: Monday–Saturday → this week's Saturday + Sunday (on Saturday, today and tomorrow); Sunday → next week's Saturday + Sunday | proposed |
 | FR-COMFORT-07 | The score and rationale follow the model in Appendix A; its reference cases are acceptance tests | proposed |
 | FR-COMFORT-08 | The weekend verdict follows the weekend score's band: ≥ 70 «‹місто› — варто їхати», 40–69 «‹місто› — можна їхати, але з планом Б», < 40 «‹місто› — краще перенести» | proposed |
-| FR-COMFORT-09 | When all six inputs of a day are missing, the day has **no score**: `value` is `null` and the rationale is «Немає даних для оцінки.» The day card shows a neutral «Немає даних» badge (no comfort colour, never a number). If Saturday or Sunday has no score, there is no weekend verdict: the weekend panel shows an info Notice «Прогноз на ці вихідні поки недоступний.» instead | proposed |
+| FR-COMFORT-09 | When all five inputs of a day (FR-COMFORT-02) are missing, the day has **no score**: `value` is `null` and the rationale is «Немає даних для оцінки.» The day card shows a neutral «Немає даних» badge (no comfort colour, never a number). If Saturday or Sunday has no score, there is no weekend verdict: the weekend panel shows an info Notice «Прогноз на ці вихідні поки недоступний.» instead | proposed |
 
 ### Animated background (capability `animated-bg`)
 
@@ -117,6 +117,7 @@ Status values: `proposed` · `accepted` · `shipped` · `dropped`.
 | FR-COMPARE-02 | A «Порівняти вихідні» toggle switches the view to a comparison table with one row per pinned city, sorted by weekend comfort (best first): Saturday and Sunday hi/lo and precipitation %, weekend comfort score; the best row is marked «Найкращий вибір». Below 720 px the table scrolls horizontally | proposed |
 | FR-COMPARE-03 | Each row names its city; activating the row (click or keyboard) makes that city the active location | proposed |
 | FR-COMPARE-04 | Pinned cities live only in the URL as repeated `pin=<lat>,<lon>,<name>` params (max 3; Appendix C), so a comparison is shareable and nothing is stored in the browser | proposed |
+| FR-COMPARE-05 | Cities without a weekend score (FR-COMFORT-09) are listed after all scored cities, in pin order. Their comfort cell shows the neutral «Немає даних» badge, and missing day values show «—». «Найкращий вибір» marks the highest-scoring city only when at least two cities have a score, so the comparison never recommends against a city it has no data for | proposed |
 
 ## Non-functional requirements
 
@@ -186,7 +187,7 @@ Status values: `proposed` · `accepted` · `shipped` · `dropped`.
 | Cloud | mean hourly `cloud_cover` 09:00–18:00 (C, %) | 0.1 × C | 10 |
 | UV | daily `uv_index_max` (U) | 3 × (U − 5) when U > 5 | 15 |
 
-A missing input adds no penalty. If **all six** inputs are missing, the day has no score: `{ value: null, rationale: "Немає даних для оцінки." }` (FR-COMFORT-09). Without this rule, a day with no data would score 100 and read as "ideal". The function is total and never throws.
+A missing input adds no penalty. If **all five** inputs (T, P, W, C, UV) are missing, the day has no score: `{ value: null, rationale: "Немає даних для оцінки." }` (FR-COMFORT-09). Without this rule, a day with no data would score 100 and read as "ideal". The function is total and never throws.
 
 **Rationale:** if Σ penalties < 20 the day is "ideal". Otherwise the factor with the largest penalty decides, with "strong" wording when that penalty is ≥ 20 (ties: the order of the table). Each line is one sentence of ≤ 80 characters:
 
@@ -308,3 +309,5 @@ Also added from the gap analysis: FR-SHELL-04, FR-SEARCH-07, FR-LOC-01/02, FR-FO
 | FR-COMFORT-01 | `value` may be `null` | A day with no data must not look comfortable |
 | FR-COMFORT-09 | Added: no score when all inputs are missing; neutral «Немає даних» badge; no weekend verdict if either weekend day has no score | Previously all-missing input scored 100 ("ideal") |
 | Appendix A | Missing-input rule, weekend rule and a «Немає даних» reference case | Acceptance tests for the new behaviour |
+| FR-COMFORT-09, Appendix A | "six inputs" → "five inputs" | FR-COMFORT-02 defines five inputs; cold and heat are two penalties on the same temperature input (CodeRabbit re-review) |
+| FR-COMPARE-05 | Added: unscored cities sort last, show «Немає даних», and «Найкращий вибір» needs at least two scored cities | Follows from FR-COMFORT-09: the comparison must not recommend without data (CodeRabbit re-review) |

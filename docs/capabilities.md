@@ -237,7 +237,7 @@ Added with the 2026-11-23 decisions:
 | FR-FORECAST-06, 07, 08 | forecast |
 | FR-COMFORT-06, 08 | weekend-highlight |
 | FR-COMFORT-07, FR-COMFORT-09 | comfort-score (weekend part: weekend-highlight) |
-| FR-COMPARE-04 | weekend-compare |
+| FR-COMPARE-04, FR-COMPARE-05 | weekend-compare |
 | FR-JOKES-02 | bottom-jokes |
 | NFR-API-01 | forecast, city-search ✱ |
 | TC-STACK-06 | forecast (icons) |
