@@ -1,0 +1,57 @@
+{
+  "manifestVersion": 3,
+  "name": "Weather Explorer",
+  "namespace": "WeatherExplorer",
+  "files": [
+    "components/Button/README.md",
+    "components/CitySearch/README.md",
+    "components/ComfortBadge/README.md",
+    "components/CompareTable/README.md",
+    "components/DayCard/README.md",
+    "components/Notice/README.md",
+    "components/WeekendHighlight/README.md",
+    "components/bundle.css",
+    "components/bundle.js",
+    "components/index.d.ts",
+    "tokens.css"
+  ],
+  "libraries": [],
+  "components": [
+    {
+      "name": "Button",
+      "group": "Actions",
+      "summary": "Starts an action; primary (wx-btn-primary, brand fill, on-brand text) at most once per view — usually «Порівняти вихідні» or the search submit."
+    },
+    {
+      "name": "CitySearch",
+      "group": "Input",
+      "summary": "The hero's centered combobox: free-form city input, debounced Open-Meteo geocoding suggestions, and the opt-in «Використати моє місцезнаходження» button beneat…"
+    },
+    {
+      "name": "ComfortBadge",
+      "group": "Comfort",
+      "summary": "Shows a day's 0–100 comfort score as number plus word on one of three fills."
+    },
+    {
+      "name": "DayCard",
+      "group": "Forecast",
+      "summary": "One of the seven daily forecast cards: weekday and date, condition icon, hi/lo, precipitation probability, wind, comfort badge."
+    },
+    {
+      "name": "WeekendHighlight",
+      "group": "Comfort",
+      "summary": "The headline answer above the seven-day grid: is the upcoming weekend worth going for, at this place."
+    },
+    {
+      "name": "CompareTable",
+      "group": "Compare",
+      "summary": "Side-by-side weekend comparison of up to three pinned cities."
+    },
+    {
+      "name": "Notice",
+      "group": "Feedback",
+      "summary": "The calm inline state for empty results and failed requests — the product's answer to \"honest under failure\"."
+    }
+  ],
+  "assetGroups": []
+}

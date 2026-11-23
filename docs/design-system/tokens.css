@@ -1,0 +1,172 @@
+/* Weather Explorer — generated from tokens.json */
+:root, [data-theme="light"] {
+  --surface: #f4f2ec; /* Page ground behind cards when the sky background is off or loading; also the reduced-motion fallback base. */
+  --surface-raised: #ffffff; /* Cards, day cards, search field, popovers, map popup. All reading text sits on this or on `surface`. */
+  --surface-sunken: #e9e6de; /* Wells inside cards: chart plot area, compare-table header row, skeletons. Use `ink` or `ink-muted` text here, not `ink-subtle`. */
+  --scrim: rgba(244, 242, 236, 0.84); /* Translucent panel laid over the animated sky behind the hero heading and the header, so text never sits on moving pixels. */
+  --ink: #1b2422; /* Primary text and temperatures on `surface`, `surface-raised`, `surface-sunken` and `brand-soft`. */
+  --ink-muted: #4d5855; /* Secondary text: admin region and country in suggestions, sunrise/sunset line, comfort explanation, units. On all three surfaces. */
+  --ink-subtle: #66706c; /* Tertiary text: footer credits, footer joke, timestamps, placeholder. On `surface` and `surface-raised` only (4.1:1 on `surface-sunken` in light — too low). */
+  --line: #dcd8ce; /* Hairline dividers and card outlines. Decorative only — never the sole boundary of a control. */
+  --line-strong: #857f73; /* Borders of inputs and quiet buttons; 3.5:1 or more on `surface` and `surface-raised` in both themes. */
+  --brand: #1d5e58; /* Lake teal. Primary button fill, links, active pin, map marker, hourly chart line. As text: on `surface`, `surface-raised` and `brand-soft`. */
+  --on-brand: #ffffff; /* Text and icons on a `brand` fill. */
+  --brand-soft: #dcebe7; /* Selected suggestion row, hover on day cards, pinned-city chip ground. */
+  --accent: #d99a1e; /* Weekend sun. Fill of the weekend marker and the Sat/Sun day-card top rule. Never as text on light grounds. */
+  --on-accent: #1b2422; /* Text on an `accent` fill. */
+  --accent-soft: #f7e9c8; /* Ground of the WeekendHighlight panel. */
+  --accent-ink: #7a4f00; /* Weekend labels as text (“Ці вихідні”) on `accent-soft`, `surface` and `surface-raised`. */
+  --comfort-good: #1a6040; /* Comfort 70–100 badge fill. Always shown with the number and the word “Комфортно”. Differs from `comfort-poor` by 3.4:1 in lightness in both themes. */
+  --on-comfort-good: #ffffff; /* Text on `comfort-good`. */
+  --comfort-fair: #f0c94f; /* Comfort 40–69 badge fill, with the word “Терпимо”. Low contrast against the page by design: the badge always carries a `line-strong` hairline. */
+  --on-comfort-fair: #1b2422; /* Text on `comfort-fair`. */
+  --comfort-poor: #f29a7e; /* Comfort 0–39 badge fill, with the word “Некомфортно”. */
+  --on-comfort-poor: #1b2422; /* Text on `comfort-poor`. */
+  --danger: #a63a24; /* Text and icon of a failed-request Notice. Calm, not alarming: never a full red fill. */
+  --focus: var(--brand); /* Keyboard focus ring: 2px solid, 2px offset. 6:1 or more on every surface in both themes. */
+  --chart-line: var(--brand); /* Hourly temperature line. */
+  --chart-area: var(--brand-soft); /* Fill under the hourly temperature line. */
+  --chart-grid: var(--line); /* Chart gridlines and the now-marker track. */
+  --sky-day-top: #a9cbe0; /* Animated background, clear day, top of the gradient. Same in both UI themes: the sky follows the place's sunrise/sunset, not the UI theme. */
+  --sky-day-bottom: #e8eff0; /* Clear day, bottom of the gradient. */
+  --sky-overcast-top: #b4bdc1; /* Cloudy or rainy day, top of the gradient. */
+  --sky-overcast-bottom: #dfe3e2; /* Cloudy or rainy day, bottom. */
+  --sky-night-top: #0e1726; /* Night, top of the gradient. */
+  --sky-night-bottom: #25344b; /* Night, bottom of the gradient. */
+  --sky-cloud: rgba(255, 255, 255, 0.55); /* Drifting cloud shapes, day and night. */
+  --sky-rain: rgba(76, 104, 122, 0.45); /* Rain streaks. */
+  --sky-snow: rgba(255, 255, 255, 0.9); /* Snow particles. */
+  --shadow-card: 0 1px 2px rgba(27, 36, 34, 0.06), 0 6px 20px rgba(27, 36, 34, 0.06); /* Cards floating over the animated sky. */
+  --shadow-pop: 0 8px 28px rgba(27, 36, 34, 0.14); /* Search suggestions list and map popup. */
+}
+[data-theme="dark"] {
+  --surface: #111816;
+  --surface-raised: #19221f;
+  --surface-sunken: #0b100e;
+  --scrim: rgba(17, 24, 22, 0.84);
+  --ink: #e9ede8;
+  --ink-muted: #aab3ae;
+  --ink-subtle: #8c9691;
+  --line: #2a3430;
+  --line-strong: #6c7772;
+  --brand: #74c3b6;
+  --on-brand: #0b100e;
+  --brand-soft: #1e3934;
+  --accent: #e6b54a;
+  --on-accent: #111816;
+  --accent-soft: #3a2f17;
+  --accent-ink: #f0c96f;
+  --comfort-good: #7fd1a0;
+  --on-comfort-good: #0b100e;
+  --comfort-fair: #e8c45c;
+  --on-comfort-fair: #111816;
+  --comfort-poor: #a83f2a;
+  --on-comfort-poor: #ffffff;
+  --danger: #f08a72;
+  --focus: var(--brand);
+  --chart-line: var(--brand);
+  --chart-area: var(--brand-soft);
+  --chart-grid: var(--line);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-pop: 0 8px 28px rgba(0, 0, 0, 0.6);
+}
+:root {
+  --space-1: 4px; /* Icon-to-label gap inside badges. */
+  --space-2: 8px; /* Gap between figures on a day card; chip padding. */
+  --space-3: 12px; /* Day card inner padding; suggestion row padding. */
+  --space-4: 16px; /* Card padding on mobile; gap in the 7-day grid. */
+  --space-6: 24px; /* Card padding on desktop; gap between page sections on mobile. */
+  --space-8: 32px; /* Gap between page sections on desktop. */
+  --space-12: 48px; /* Hero top and bottom padding. */
+  --space-16: 64px; /* Hero top padding on desktop. */
+  --radius-sm: 6px; /* Badges, chips, suggestion rows. */
+  --radius-md: 10px; /* Inputs, buttons, day cards. */
+  --radius-lg: 16px; /* Section cards, map frame, WeekendHighlight. */
+  --radius-pill: 999px; /* Pinned-city chips and the comfort badge when shown as a number only. */
+  --z-sky: 0; /* Animated background layer. Always `pointer-events: none`. */
+  --z-content: 1; /* Page content above the sky. */
+  --z-header: 20; /* Sticky header. */
+  --z-popover: 30; /* Search suggestions, above the map's own panes. */
+  --font-sans: "Golos Text", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --text-display: 600 48px/52px var(--font-sans); /* Hero question above the search. Once per page. */
+  --text-temp-xl: 600 40px/44px var(--font-sans); /* Weekend headline temperature. */
+  --text-title: 600 24px/30px var(--font-sans); /* Active place name, section titles. */
+  --text-heading: 600 18px/24px var(--font-sans); /* Card titles. */
+  --text-body: 400 16px/24px var(--font-sans); /* Comfort explanation, notices, all running text. */
+  --text-body-sm: 400 14px/20px var(--font-sans); /* Suggestion secondary line, sunrise/sunset, table cells. */
+  --text-label: 600 13px/16px var(--font-sans); /* Weekday on day cards, badge words, button text at small size. */
+  --text-caption: 400 12px/16px var(--font-sans); /* Footer credits, footer joke, map attribution. */
+  --text-clock: 500 14px/20px var(--font-mono); /* Header live clock. Tabular, so digits do not jitter. */
+  --text-data: 400 13px/18px var(--font-mono); /* Precipitation, wind, UV figures on day cards and in the compare table. */
+}
+.display {
+  font-family: var(--font-sans);
+  font-size: 48px;
+  line-height: 52px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.temp-xl {
+  font-family: var(--font-sans);
+  font-size: 40px;
+  line-height: 44px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.title {
+  font-family: var(--font-sans);
+  font-size: 24px;
+  line-height: 30px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.heading {
+  font-family: var(--font-sans);
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.body {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.body-sm {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.label {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 16px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.caption {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.clock {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+.data {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 400;
+  letter-spacing: 0;
+}

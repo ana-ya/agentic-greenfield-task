@@ -1,0 +1,13 @@
+<!-- @dsCard group="Comfort" height=104 -->
+<!doctype html>
+<html lang="uk">
+<head><meta charset="utf-8"><title>ComfortBadge — preview</title></head>
+<body>
+<div class="wx-stage" id="root"></div>
+<script>
+var W = window.WeatherExplorer, r = document.getElementById('root');
+if (W && W.badgeHTML) { r.innerHTML = [86, 58, 22].map(function (s) { return W.badgeHTML(s); }).join('') + [86, 58, 22].map(function (s) { return W.badgeHTML(s, 'lg'); }).join(''); }
+else { r.innerHTML = '<span class="wx-badge wx-badge-good"><span class="wx-score">86</span>Комфортно</span><span class="wx-badge wx-badge-fair"><span class="wx-score">58</span>Терпимо</span><span class="wx-badge wx-badge-poor"><span class="wx-score">22</span>Некомфортно</span>'; }
+</script>
+</body>
+</html>

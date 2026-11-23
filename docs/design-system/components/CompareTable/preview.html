@@ -1,0 +1,25 @@
+<!-- @dsCard group="Compare" height=300 -->
+<!doctype html>
+<html lang="uk">
+<head><meta charset="utf-8"><title>CompareTable — preview</title></head>
+<body>
+<div class="wx-stage" style="display:block">
+  <div class="wx-chips"><span class="wx-chip">Львів</span><span class="wx-chip">Ужгород</span><span class="wx-chip">Чернівці</span><span class="wx-chip wx-chip-empty">Закріплено 3 з 3</span></div>
+  <table class="wx-compare">
+    <thead><tr><th scope="col">Місто</th><th scope="col">Субота</th><th scope="col">Неділя</th><th scope="col">Комфорт</th></tr></thead>
+    <tbody>
+      <tr class="wx-best"><th scope="row">Ужгород</th><td class="wx-num">15° / 7° · 5%</td><td class="wx-num">14° / 6° · 10%</td><td data-score="84"></td></tr>
+      <tr><th scope="row">Львів</th><td class="wx-num">13° / 5° · 5%</td><td class="wx-num">12° / 6° · 15%</td><td data-score="78"></td></tr>
+      <tr><th scope="row">Чернівці</th><td class="wx-num">10° / 3° · 60%</td><td class="wx-num">9° / 2° · 70%</td><td data-score="38"></td></tr>
+    </tbody>
+  </table>
+</div>
+<script>
+var W = window.WeatherExplorer;
+document.querySelectorAll('[data-score]').forEach(function (el) {
+  var s = +el.getAttribute('data-score');
+  el.innerHTML = W && W.badgeHTML ? W.badgeHTML(s) : '<span class="wx-badge">' + s + '</span>';
+});
+</script>
+</body>
+</html>

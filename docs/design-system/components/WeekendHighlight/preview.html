@@ -1,0 +1,24 @@
+<!-- @dsCard group="Comfort" height=220 -->
+<!doctype html>
+<html lang="uk">
+<head><meta charset="utf-8"><title>WeekendHighlight — preview</title></head>
+<body>
+<div class="wx-stage" style="display:block">
+  <section class="wx-weekend" aria-labelledby="wk">
+    <div>
+      <span class="wx-weekend-label">Ці вихідні · 28–29 листопада</span>
+      <h2 id="wk">Львів — варто їхати</h2>
+      <p>Сухо й прохолодно, вітер слабкий. Візьміть теплу куртку на вечір.</p>
+    </div>
+    <div><div class="wx-weekend-temp">13° <span>/ 5°</span></div><div style="text-align:right;margin-top:8px" data-score="78" data-size="lg"></div></div>
+    <div class="wx-weekend-days"><span>Сб <b>13° / 5°</b> · опади 5%</span><span>Нд <b>12° / 6°</b> · опади 15%</span></div>
+  </section>
+</div>
+<script>
+var W = window.WeatherExplorer;
+document.querySelectorAll('[data-score]').forEach(function (el) {
+  el.innerHTML = W && W.badgeHTML ? W.badgeHTML(+el.getAttribute('data-score'), el.getAttribute('data-size')) : '';
+});
+</script>
+</body>
+</html>

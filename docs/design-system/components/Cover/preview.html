@@ -1,0 +1,53 @@
+<!-- @dsCard height=288 -->
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<title>Weather Explorer</title>
+<style>
+  html, body { margin:0; height:100%; }
+  body { background:var(--surface); color:var(--ink); font-family:var(--font-sans); overflow:hidden; }
+  .cover { position:relative; height:288px; overflow:hidden; }
+  .art { position:absolute; top:0; left:480px; width:480px; height:288px; overflow:hidden; }
+  .art svg { display:block; width:480px; height:288px; }
+  .brand { fill:var(--brand); }
+  .sky { fill:var(--sky-day-top); }
+  .sun { fill:var(--accent); }
+  .day { fill:var(--brand-soft); }
+  .wkd { fill:var(--accent); }
+  .slab { rx:var(--radius-lg); }
+  .tile { rx:var(--radius-md); }
+  .words { position:absolute; left:var(--space-6); bottom:var(--space-6); max-width:440px; }
+  .name { margin:0; font-size:88px; line-height:.95; font-weight:600; letter-spacing:-.02em; color:var(--ink); }
+  .tag { margin:var(--space-3) 0 0 4px; font-size:14px; line-height:20px; color:var(--ink-muted); }
+</style>
+</head>
+<body>
+<div class="cover">
+<div class="art" aria-hidden="true">
+<svg viewBox="0 0 480 288" width="480" height="288">
+<!--
+  blocks      brand 160×216 bled off the top · sky-day-top 304×168 bleeding off the right · accent disc r40 (the weekend sun) set in the sky · ≈35% of 960×288
+  arrangement one tall lake slab, the sky block beside it, the sun inside the sky; a strip of seven day tiles along the bottom
+  pattern     the week itself: seven tiles (brand-soft) with the last two in accent — "the upcoming weekend called out first" is the product's one idea
+  scales      tiles 56×48 at an 8px (space-2) gap, rows space-4 apart; slab and sky corners radius-lg, tiles radius-md, sun radius-pill
+-->
+<rect class="brand slab" x="16" y="-16" width="160" height="216" rx="16"/>
+<rect class="sky slab" x="192" y="32" width="304" height="168" rx="16"/>
+<circle class="sun" cx="384" cy="104" r="40"/>
+<rect class="day tile" x="16" y="216" width="56" height="48" rx="10"/>
+<rect class="day tile" x="80" y="216" width="56" height="48" rx="10"/>
+<rect class="day tile" x="144" y="216" width="56" height="48" rx="10"/>
+<rect class="day tile" x="208" y="216" width="56" height="48" rx="10"/>
+<rect class="day tile" x="272" y="216" width="56" height="48" rx="10"/>
+<rect class="wkd tile" x="336" y="216" width="56" height="48" rx="10"/>
+<rect class="wkd tile" x="400" y="216" width="56" height="48" rx="10"/>
+</svg>
+</div>
+<div class="words">
+<h1 class="name">Weather Explorer</h1>
+<p class="tag">Чи варті вихідні поїздки. Спокійно, без акаунтів і трекерів.</p>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,105 @@
+/*
+ * Weather Explorer — component styles (wx- classes), ported from
+ * docs/design-system/components/bundle.css. Imported into layer(components) by globals.css,
+ * so Tailwind utilities can adjust layout (margin, width) around a component.
+ *
+ * Differences from the source bundle — keep them when re-syncing:
+ *   - no Google Fonts @import: fonts are self-hosted via @fontsource (privacy requirement);
+ *   - no `body` rule and no `.wx-stage` (preview-only); base styles live in globals.css;
+ *   - «Найкращий вибір» is rendered from lib/strings.ts as `.wx-best-label`,
+ *     not injected by CSS `::after`, so every UI string stays in one module.
+ *
+ * Values come from tokens.css; nothing here re-declares a token.
+ */
+
+.wx-num { font-variant-numeric: tabular-nums; }
+
+/* focus */
+.wx-btn:focus-visible, .wx-input:focus-visible, .wx-day:focus-visible, .wx-option:focus-visible, .wx-chip:focus-visible {
+  outline: 2px solid var(--focus); outline-offset: 2px;
+}
+
+/* Button */
+.wx-btn { font: inherit; font-size: 15px; font-weight: 500; line-height: 20px; height: 40px; padding: 0 var(--space-4);
+  display: inline-flex; align-items: center; gap: var(--space-2); border-radius: var(--radius-md);
+  border: 1px solid var(--line-strong); background: var(--surface-raised); color: var(--ink); cursor: pointer; }
+.wx-btn:hover { background: var(--brand-soft); }
+.wx-btn-primary { background: var(--brand); border-color: var(--brand); color: var(--on-brand); }
+.wx-btn-primary:hover { background: var(--brand); filter: brightness(0.92); }
+.wx-btn-text { border-color: transparent; background: transparent; color: var(--brand); padding: 0 var(--space-2); }
+.wx-btn[disabled] { opacity: .5; cursor: default; }
+.wx-btn svg { width: 18px; height: 18px; }
+
+/* CitySearch */
+.wx-search { width: 100%; max-width: 560px; margin: 0 auto; position: relative; }
+.wx-field { display: flex; align-items: center; gap: var(--space-2); height: 52px; padding: 0 var(--space-4);
+  background: var(--surface-raised); border: 1px solid var(--line-strong); border-radius: var(--radius-md); }
+.wx-field:focus-within { outline: 2px solid var(--focus); outline-offset: 2px; }
+.wx-field svg { width: 20px; height: 20px; color: var(--ink-muted); flex: none; }
+.wx-input { flex: 1; font: inherit; font-size: 17px; border: 0; outline: 0; background: transparent; color: var(--ink); min-width: 0; }
+.wx-input::placeholder { color: var(--ink-subtle); }
+.wx-list { list-style: none; margin: var(--space-2) 0 0; padding: var(--space-1); background: var(--surface-raised);
+  border: 1px solid var(--line); border-radius: var(--radius-md); box-shadow: var(--shadow-pop); z-index: var(--z-popover); }
+.wx-option { display: flex; gap: var(--space-3); align-items: center; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); cursor: pointer; }
+.wx-option[aria-selected="true"], .wx-option:hover { background: var(--brand-soft); }
+.wx-option .wx-flag { font-size: 18px; width: 24px; text-align: center; }
+.wx-option b { font-weight: 600; display: block; }
+.wx-option small { font-size: 14px; line-height: 20px; color: var(--ink-muted); }
+.wx-search-foot { display: flex; justify-content: center; margin-top: var(--space-3); }
+
+/* ComfortBadge */
+.wx-badge { align-self: flex-start; display: inline-flex; align-items: center; gap: var(--space-1); height: 24px; padding: 0 var(--space-2);
+  border-radius: var(--radius-sm); font-size: 13px; line-height: 16px; font-weight: 600; white-space: nowrap; }
+.wx-badge .wx-score { font-variant-numeric: tabular-nums; }
+.wx-badge-good { background: var(--comfort-good); color: var(--on-comfort-good); }
+.wx-badge-fair { background: var(--comfort-fair); color: var(--on-comfort-fair); box-shadow: inset 0 0 0 1px var(--line-strong); }
+.wx-badge-poor { background: var(--comfort-poor); color: var(--on-comfort-poor); }
+.wx-badge-lg { height: 32px; font-size: 15px; padding: 0 var(--space-3); }
+
+/* DayCard */
+.wx-days { display: grid; grid-template-columns: repeat(7, minmax(120px, 1fr)); gap: var(--space-3); overflow-x: auto; scroll-snap-type: x mandatory; padding: var(--space-4); }
+.wx-day { scroll-snap-align: start; display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-3);
+  background: var(--surface-raised); border: 1px solid var(--line); border-radius: var(--radius-md); box-shadow: var(--shadow-card);
+  border-top: 3px solid var(--line); }
+.wx-day:hover { background: var(--brand-soft); }
+.wx-day-weekend { border-top-color: var(--accent); }
+.wx-day-name { font-size: 13px; line-height: 16px; font-weight: 600; color: var(--ink-muted); }
+.wx-day-weekend .wx-day-name { color: var(--accent-ink); }
+.wx-day svg { width: 28px; height: 28px; color: var(--ink); }
+.wx-hilo { color: var(--ink); font-size: 18px; line-height: 24px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.wx-hilo span { color: var(--ink-muted); font-weight: 400; }
+.wx-figs { font-family: var(--font-mono); font-size: 13px; line-height: 18px; color: var(--ink-muted); display: flex; flex-direction: column; }
+
+/* WeekendHighlight */
+.wx-weekend { display: grid; grid-template-columns: 1fr auto; gap: var(--space-4) var(--space-6); align-items: center;
+  padding: var(--space-6); background: var(--accent-soft); border-radius: var(--radius-lg); }
+.wx-weekend-label { display: inline-flex; align-items: center; gap: var(--space-2); font-size: 13px; line-height: 16px; font-weight: 600; color: var(--accent-ink); }
+.wx-weekend-label::before { content: ""; width: 10px; height: 10px; border-radius: var(--radius-pill); background: var(--accent); }
+.wx-weekend h2 { margin: var(--space-2) 0 var(--space-1); font-size: 24px; line-height: 30px; font-weight: 600; }
+.wx-weekend p { margin: 0; color: var(--ink-muted); }
+.wx-weekend-temp { font-size: 40px; line-height: 44px; font-weight: 600; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; text-align: right; }
+.wx-weekend-temp span { color: var(--ink-muted); font-weight: 400; }
+.wx-weekend-days { grid-column: 1 / -1; display: flex; gap: var(--space-6); font-size: 14px; line-height: 20px; color: var(--ink-muted); }
+.wx-weekend-days b { color: var(--ink); font-weight: 600; }
+
+/* CompareTable */
+.wx-compare { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--surface-raised);
+  border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; font-size: 14px; line-height: 20px; }
+.wx-compare th, .wx-compare td { padding: var(--space-3) var(--space-4); text-align: left; border-bottom: 1px solid var(--line); }
+.wx-compare thead th { background: var(--surface-sunken); font-size: 13px; font-weight: 600; color: var(--ink-muted); }
+.wx-compare tbody tr:last-child td, .wx-compare tbody tr:last-child th { border-bottom: 0; }
+.wx-compare tbody th { font-weight: 600; font-size: 16px; }
+.wx-compare .wx-best-label { display: block; font-size: 12px; line-height: 16px; font-weight: 600; color: var(--accent-ink); }
+.wx-compare td.wx-num { font-family: var(--font-mono); font-size: 13px; }
+.wx-chips { display: flex; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-3); }
+.wx-chip { display: inline-flex; align-items: center; gap: var(--space-2); height: 32px; padding: 0 var(--space-3);
+  border-radius: var(--radius-pill); background: var(--brand-soft); color: var(--ink); font-size: 14px; border: 1px solid transparent; }
+.wx-chip-empty { background: transparent; border: 1px dashed var(--line-strong); color: var(--ink-muted); }
+
+/* Notice */
+.wx-notice { display: flex; gap: var(--space-3); align-items: flex-start; padding: var(--space-3) var(--space-4);
+  background: var(--surface-raised); border: 1px solid var(--line); border-radius: var(--radius-md); max-width: 560px; }
+.wx-notice svg { width: 20px; height: 20px; flex: none; margin-top: 2px; color: var(--ink-muted); }
+.wx-notice-error svg, .wx-notice-error strong { color: var(--danger); }
+.wx-notice strong { display: block; font-weight: 600; }
+.wx-notice p { margin: 0; color: var(--ink-muted); font-size: 14px; line-height: 20px; }

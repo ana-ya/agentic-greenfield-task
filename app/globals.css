@@ -1,26 +1,96 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+ * Weather Explorer design system.
+ * Source of truth: docs/design-system/ (see DESIGN.md). Do not copy token values here —
+ * tokens.css is imported as-is and stays unlayered, so its variables win over Tailwind's
+ * defaults that share a name (--radius-*, --shadow-*, --font-*).
+ */
+@import "../docs/design-system/tokens.css";
+@import "./styles/wx-components.css" layer(components);
+
+/*
+ * Tailwind ↔ design tokens.
+ * `inline` makes utilities emit `var(--token)` directly, so they follow data-theme.
+ * `reference` stops Tailwind from emitting its own copies of these variables.
+ * Default palettes, radii and shadows are cleared: only design-system values exist.
+ */
+@theme inline reference {
+  --color-*: initial;
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-scrim: var(--scrim);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-subtle: var(--ink-subtle);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-brand: var(--brand);
+  --color-on-brand: var(--on-brand);
+  --color-brand-soft: var(--brand-soft);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-ink: var(--accent-ink);
+  --color-comfort-good: var(--comfort-good);
+  --color-on-comfort-good: var(--on-comfort-good);
+  --color-comfort-fair: var(--comfort-fair);
+  --color-on-comfort-fair: var(--on-comfort-fair);
+  --color-comfort-poor: var(--comfort-poor);
+  --color-on-comfort-poor: var(--on-comfort-poor);
+  --color-danger: var(--danger);
+  --color-focus: var(--focus);
+  --color-chart-line: var(--chart-line);
+  --color-chart-area: var(--chart-area);
+  --color-chart-grid: var(--chart-grid);
+  --color-sky-day-top: var(--sky-day-top);
+  --color-sky-day-bottom: var(--sky-day-bottom);
+  --color-sky-overcast-top: var(--sky-overcast-top);
+  --color-sky-overcast-bottom: var(--sky-overcast-bottom);
+  --color-sky-night-top: var(--sky-night-top);
+  --color-sky-night-bottom: var(--sky-night-bottom);
+  --color-sky-cloud: var(--sky-cloud);
+  --color-sky-rain: var(--sky-rain);
+  --color-sky-snow: var(--sky-snow);
+
+  --radius-*: initial;
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-pill: var(--radius-pill);
+
+  --shadow-*: initial;
+  --shadow-card: var(--shadow-card);
+  --shadow-pop: var(--shadow-pop);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Layout: mobile first, one column below 720px, 12-column grid from 1024px, max 1200px. */
+@theme {
+  --breakpoint-*: initial;
+  --breakpoint-md: 45rem; /* 720px */
+  --breakpoint-lg: 64rem; /* 1024px */
+  --container-page: 75rem; /* 1200px */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    color-scheme: light;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  html[data-theme="dark"] {
+    color-scheme: dark;
+  }
+  body {
+    background: var(--surface);
+    color: var(--ink);
+    font: var(--text-body);
+  }
+  /* Focus: 2px solid `focus`, 2px offset, on every interactive element. */
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
 }
