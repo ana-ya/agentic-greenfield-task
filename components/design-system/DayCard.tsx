@@ -11,8 +11,8 @@ export interface DayCardProps {
   lo: number;
   /**
    * Condition glyph with its Ukrainian label, e.g. <RainIcon label="Дощ" />.
-   * (The design system's DayCardProps takes a WMO `code`; the code → icon map
-   * is pending the icon-set decision, so the caller passes the glyph for now.)
+   * (The design system's DayCardProps takes a WMO `code`; until the WMO → Lucide
+   * mapping in docs/requirements.md Appendix B lands, the caller passes the glyph.)
    */
   icon: ReactNode;
   /** Precipitation probability, %. */

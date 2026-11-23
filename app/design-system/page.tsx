@@ -104,7 +104,7 @@ export default function DesignSystemPage() {
           score={78}
           hi={13}
           lo={5}
-          explanation="Сухо й прохолодно, вітер слабкий. Візьміть теплу куртку на вечір."
+          explanation="Сухо й прохолодно, вітер слабкий — на вечір знадобиться тепла куртка."
           saturday={{ hi: 13, lo: 5, precipProb: 5 }}
           sunday={{ hi: 12, lo: 6, precipProb: 15 }}
         />
