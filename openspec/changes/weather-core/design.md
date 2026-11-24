@@ -43,7 +43,7 @@ app/page.tsx + app/_components/ page composition, CitySearch, ThemeIndicator (cl
 - *Alternative:* one `lib/openMeteo.ts` that fetches and parses. Rejected, because fetching needs `next/cache` (framework), and splitting it lets the parser be tested without network.
 
 ### D-2 · Page composition with Cache Components
-`app/page.tsx` renders a static shell: header, search, footer, plus a `<Suspense fallback={<ForecastSkeleton/>}>` around `<ForecastSection searchParams={…}>`. `ForecastSection` awaits `searchParams` and parses them with `lib/location`:
+`app/page.tsx` renders a static shell: header, search, footer, plus a `<Suspense fallback={<ForecastSkeleton/>}>` around `<ForecastSection searchParams={…}>`. The hero sits above the search in its own `<Suspense fallback={null}>`, since it also depends on the URL (shown only without a location). `ForecastSection` awaits `searchParams` and parses them with `lib/location`:
 - empty params → hero empty state
 - invalid params → info Notice
 - valid params → `await getForecast(lat, lon)` (cached), then normalise and render the weekend panel and seven `DayCard`s

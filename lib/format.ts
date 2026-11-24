@@ -30,13 +30,13 @@ function parseCalendarDate(date: string): Date {
   return new Date(`${date}T00:00:00Z`);
 }
 
-/** Rounded temperature with a degree sign: 17.6 → «18°». Celsius only. */
-export function temp(celsius: number): string {
-  return `${Math.round(celsius) || 0}°`;
+/** Rounded temperature with a degree sign: 17.6 → «18°». Celsius only. Missing → «—». */
+export function temp(celsius: number | null): string {
+  return celsius === null ? "—" : `${Math.round(celsius) || 0}°`;
 }
 
 /** Hi/lo pair as the design system writes it: «18° / 9°». */
-export function hiLo(hi: number, lo: number): string {
+export function hiLo(hi: number | null, lo: number | null): string {
   return `${temp(hi)} / ${temp(lo)}`;
 }
 

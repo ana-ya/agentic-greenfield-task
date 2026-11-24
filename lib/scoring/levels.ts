@@ -1,4 +1,4 @@
-import { strings } from "./strings";
+import { strings } from "../i18n";
 
 /** Port of `WeatherExplorer.comfortLevel` from docs/design-system/components/bundle.js. */
 

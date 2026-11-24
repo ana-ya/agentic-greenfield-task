@@ -27,15 +27,18 @@ Product: one calm Ukrainian-first screen that says whether this weekend's trip i
 - `docs/design-system/` is a read-only export. Never edit it; tokens come from `docs/design-system/tokens.css` via `app/globals.css`.
 - Use token utilities (`bg-surface-raised`, `text-ink-muted`, `rounded-md`, `shadow-card`) and type classes (`title`, `body`, `data`…). No hex values, no Tailwind default colours, no `text-<size>`.
 - Reuse `@/components/design-system` before writing new markup; add every new component to `/design-system`.
-- All UI strings go in `lib/strings.ts`: Ukrainian, no exclamation marks, no emoji, units on every number.
+- All UI strings go in `lib/i18n/uk.ts`: Ukrainian, no exclamation marks, no emoji, units on every number.
 - `accent` colours are for the weekend only. Comfort is always number + word (`<ComfortBadge>`). Errors are calm `<Notice>`s.
 - No third-party requests (fonts are self-hosted via `@fontsource`; no `next/font/google`, no CDNs).
 
 ## Layout
 
 - `app/` — routes; `app/globals.css` (Tailwind + token mapping), `app/styles/wx-components.css` (component CSS)
-- `components/design-system/` — React design-system components and icons
-- `lib/` — `strings.ts` (all copy), `comfort.ts`, `format.ts`, `cx.ts`
+- `app/_components/` — page pieces: `CitySearch` (client), `ForecastSection` + `Hero` (server), `ForecastSkeleton`, `ThemeIndicator` (client)
+- `app/_data/open-meteo.ts` — server-only Open-Meteo access, cached with `"use cache"`; `app/_data/fixtures.ts` — fixture-mode data
+- `app/api/geocode/route.ts` — city search proxy, so the browser only talks to this app
+- `components/design-system/` — React design-system components and icons (`WeatherIcon` = Lucide)
+- `lib/` — `i18n/` (all copy: `uk.ts`, English mirror `en.ts`), `location/` (URL ↔ place), `forecast/` (types, normaliser, WMO mapping, fixtures), `scoring/` (comfort score and bands), `weekend/`, `geocode/` (search results), `format.ts`, `cx.ts`
   - `lib/` is framework-free (TC-PURE-01): no React, no Next.js, no browser globals. Lint rejects them (`TC-PURE-01:` errors), and unit tests run without a DOM. Put anything that needs them in `components/` or `app/`.
   - Unit tests sit next to their module as `*.test.ts` (Vitest, Node environment).
 - `docs/` — product docs and the design-system export
@@ -45,7 +48,8 @@ Product: one calm Ukrainian-first screen that says whether this weekend's trip i
 Use Node.js 24 (see `.nvmrc`; `nvm use`) and npm ≥ 11.21 (`npm install -g npm@11`; npm 12 needs Node ≥ 24.15). Older npm 11 drops WebAssembly-only entries from `package-lock.json`, and CI's `npm ci` then rejects it. Install with `npm ci`; run `npm install` only to change dependencies, and commit the lockfile it writes.
 
 - **Definition of done: `npm run verify`.** It runs, stopping at the first failure: `lint` → `typecheck` → `test` → `health` → `build`. CI runs the same command on every pull request and push to `main` (`.github/workflows/verify.yml`), and it must stay under 60 s on a clean checkout (NFR-DX-01).
-- `npm run dev` — dev server.
+- `npm run dev` — dev server with live Open-Meteo data.
+- `WEATHER_FIXTURES=1 npm run dev` — fixture mode: sample data, no network (never in production). Ужгород = rainy, Київ = Saturday without data, Одеса = Sunday today, Honolulu = UTC−10, «Нульовий острів» = forced forecast failure; a search starting with «fail» fails, 3-letter queries answer after 1.2 s.
 - `npm run lint` — ESLint, including the TC-PURE-01 rule for `lib/`.
 - `npm run typecheck` — `next typegen && tsc --noEmit` (route types such as `LayoutProps` are generated first, so it also works on a clean checkout).
 - `npm test` — unit tests once (Vitest); `npm run test:watch` while working.

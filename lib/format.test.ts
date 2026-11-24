@@ -9,11 +9,16 @@ describe("temp", () => {
   it("never shows a negative zero", () => {
     expect(temp(-0.4)).toBe("0°");
   });
+
+  it("shows a dash for a missing value", () => {
+    expect(temp(null)).toBe("—");
+  });
 });
 
 describe("hiLo", () => {
   it("writes hi and lo the design-system way", () => {
     expect(hiLo(18, 9)).toBe("18° / 9°");
+    expect(hiLo(null, 9)).toBe("— / 9°");
   });
 });
 

@@ -8,9 +8,8 @@
   ],
   "ignoreExports": [
     { "file": "components/design-system/index.ts", "exports": ["*"] },
-    // Design-system API kept for upcoming features: SearchIcon for city search (M1),
-    // MAX_PINNED_CITIES for weekend compare (M4). Remove each entry once it is used.
-    { "file": "components/design-system/icons.tsx", "exports": ["SearchIcon"] },
+    // Design-system API kept for an upcoming feature: MAX_PINNED_CITIES for weekend compare (M4).
+    // Remove the entry once it is used.
     { "file": "components/design-system/CompareTable.tsx", "exports": ["MAX_PINNED_CITIES"] }
   ]
 }

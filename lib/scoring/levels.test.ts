@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { clampScore, comfortLevel } from "./comfort";
+import { clampScore, comfortLevel } from "./levels";
 
 describe("clampScore", () => {
   it.each([

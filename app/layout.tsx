@@ -7,7 +7,7 @@ import "@fontsource/golos-text/600.css";
 import "@fontsource/ibm-plex-mono/400.css";
 import "@fontsource/ibm-plex-mono/500.css";
 import "./globals.css";
-import { strings } from "@/lib/strings";
+import { strings } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: strings.appName,

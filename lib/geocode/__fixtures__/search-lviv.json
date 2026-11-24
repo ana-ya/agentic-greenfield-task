@@ -1,0 +1,7 @@
+{"results":[
+ {"id":702550,"name":"Львів","latitude":49.83826,"longitude":24.02324,"elevation":296.0,"feature_code":"PPLA","country_code":"UA","admin1_id":702549,"timezone":"Europe/Kyiv","population":717803,"country_id":690791,"country":"Україна","admin1":"Львівська область"},
+ {"id":702563,"name":"Львове","latitude":46.71298,"longitude":32.93425,"elevation":46.0,"feature_code":"PPL","country_code":"UA","timezone":"Europe/Kyiv","country_id":690791,"country":"Україна","admin1":"Херсонська область"},
+ {"id":3093109,"name":"Lwówek","latitude":52.45128,"longitude":16.18286,"elevation":84.0,"feature_code":"PPL","country_code":"PL","timezone":"Europe/Warsaw","country_id":798544,"country":"Польща","admin1":"Великопольське воєводство"},
+ {"id":9999999,"name":"Без регіону","latitude":10.5,"longitude":-66.9,"country_code":"VE","country":"Венесуела"},
+ {"id":1,"name":"Битий запис","latitude":"x","longitude":24.0}
+],"generationtime_ms":0.6}

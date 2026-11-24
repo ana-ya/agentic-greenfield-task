@@ -6,7 +6,7 @@
  * Differences from the source bundle — keep them when re-syncing:
  *   - no Google Fonts @import: fonts are self-hosted via @fontsource (privacy requirement);
  *   - no `body` rule and no `.wx-stage` (preview-only); base styles live in globals.css;
- *   - «Найкращий вибір» is rendered from lib/strings.ts as `.wx-best-label`,
+ *   - «Найкращий вибір» is rendered from lib/i18n/uk.ts as `.wx-best-label`,
  *     not injected by CSS `::after`, so every UI string stays in one module.
  *
  * Values come from tokens.css; nothing here re-declares a token.
@@ -54,6 +54,7 @@
 .wx-badge-good { background: var(--comfort-good); color: var(--on-comfort-good); }
 .wx-badge-fair { background: var(--comfort-fair); color: var(--on-comfort-fair); box-shadow: inset 0 0 0 1px var(--line-strong); }
 .wx-badge-poor { background: var(--comfort-poor); color: var(--on-comfort-poor); }
+.wx-badge-none { background: var(--surface-sunken); color: var(--ink-muted); box-shadow: inset 0 0 0 1px var(--line-strong); }
 .wx-badge-lg { height: 32px; font-size: 15px; padding: 0 var(--space-3); }
 
 /* DayCard */

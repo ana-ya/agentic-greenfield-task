@@ -18,8 +18,8 @@ One calm screen that answers «чи варто їхати на ці вихідн
 | Component CSS (`wx-` classes) | `app/styles/wx-components.css` — port of `components/bundle.css` | Only to re-sync or fix a bug; note it in the file header |
 | Tailwind ↔ token mapping, base styles, focus ring | `app/globals.css` | Yes, when a token is added |
 | React components | `components/design-system/` (import from `@/components/design-system`) | Yes |
-| Comfort levels, formatting | `lib/comfort.ts`, `lib/format.ts` | Yes |
-| **Every UI string** | `lib/strings.ts` | Yes — the only place copy lives |
+| Comfort levels, formatting | `lib/scoring/levels.ts`, `lib/format.ts` | Yes |
+| **Every UI string** | `lib/i18n/uk.ts` | Yes — the only place copy lives |
 | Fonts | `@fontsource/golos-text`, `@fontsource/ibm-plex-mono`, imported in `app/layout.tsx` | — |
 | Living reference page | `/design-system` (`app/design-system/page.tsx`, noindex) | Add every new component here |
 
@@ -28,7 +28,7 @@ One calm screen that answers «чи варто їхати на ці вихідн
 Breaking any of these is a bug, not a style choice.
 
 **Copy**
-- Ukrainian first; all strings come from `lib/strings.ts`. No string literals in JSX.
+- Ukrainian first; all strings come from `lib/i18n/uk.ts`. No string literals in JSX.
 - No exclamation marks. No emoji (the only exception: a country flag in a search suggestion). Sentence case.
 - Address the visitor with «ви» in instructions; prefer impersonal phrasing where natural («Нічого не знайдено»).
 - A comfort explanation is one sentence of at most 80 characters (FR-COMFORT-03).
@@ -57,7 +57,7 @@ Breaking any of these is a bug, not a style choice.
 - Hover: `brand-soft` ground. Pressed: one step darker, not opacity. Disabled: 50% opacity and the label says why («Закріплено 3 з 3»).
 - Loading: `surface-sunken` skeletons in the final shape; no lingering spinners.
 - One `primary` button per view at most.
-- Icons next to numbers carry a Ukrainian label (`<RainIcon label="Дощ" />`); decorative icons are `aria-hidden` (the default).
+- Weather icons are Lucide glyphs via `<WeatherIcon code={…} />`, which carries its Ukrainian label as the accessible name («Дощ»). UI icons in `icons.tsx` are decorative and `aria-hidden` by default; pass `label` when one carries meaning.
 - Motion: sky clouds drift over 60–120 s, ≤ ~80 rain/snow particles, nothing flashes. `prefers-reduced-motion: reduce` → static gradient, no particles.
 
 **Privacy**
@@ -90,11 +90,12 @@ They are unlayered and win over Tailwind utilities, so don't combine them with `
 ### Components
 
 ```tsx
-import { Button, ComfortBadge, DayCard, Notice, WeekendHighlight, CompareTable, RainIcon } from "@/components/design-system";
-import { strings } from "@/lib/strings";
+import { Button, ComfortBadge, DayCard, Notice, WeekendHighlight, CompareTable, WeatherIcon } from "@/components/design-system";
+import { strings } from "@/lib/i18n";
 
-<WeekendHighlight title={strings.weekend.worthIt("Львів")} saturdayDate="2026-11-28" sundayDate="2026-11-29" … />
-<DayCard date="2026-11-27" hi={9} lo={3} icon={<RainIcon label="Дощ" />} precipProb={80} windKmh={22} comfort={31} />
+<WeekendHighlight title={strings.weekend.verdict.good("Львів")} saturdayDate="2026-11-28" sundayDate="2026-11-29" … />
+<DayCard date="2026-11-27" hi={9} lo={3} code={63} precipProb={80} windKmh={22} comfort={31} />
+<ComfortBadge score={null} /> {/* «Немає даних» */}
 <Notice tone="error" title={strings.errors.forecast}>{strings.errors.forecastHint}</Notice>
 ```
 
@@ -111,10 +112,10 @@ import { strings } from "@/lib/strings";
 Keep these when re-syncing:
 
 1. **Fonts** — self-hosted via `@fontsource` instead of the Google Fonts `@import` in `bundle.css`.
-2. **«Найкращий вибір»** — rendered from `lib/strings.ts` as `.wx-best-label`, not by CSS `::after`.
+2. **«Найкращий вибір»** — rendered from `lib/i18n/uk.ts` as `.wx-best-label`, not by CSS `::after`.
 3. **`weekday()` / `dayLabel()`** — take `"YYYY-MM-DD"` and use UTC; the export's `new Date(date).getDay()` shifts the day for visitors west of UTC.
 4. **ComfortBadge** — `role="img"` plus `aria-label`; `aria-label` on a bare `<span>` isn't reliably announced.
-5. **DayCard** — takes an `icon` node plus label instead of a WMO `code` until the WMO → Lucide mapping (PRD Appendix B) is implemented.
+5. **DayCard** — takes `code` as the export intended, and also accepts `null` figures (rendered «—») and `comfort={null}` (FR-COMFORT-09).
 6. **WeekendHighlight** — takes structured `saturday` / `sunday` values plus dates; the export's props are pre-formatted strings.
 7. **Comfort explanation** — exactly one Ukrainian sentence, at most 80 characters (FR-COMFORT-03). The export's sample («Тепло й сухо, легкий вітер. Гарний день для прогулянки.») is two sentences; follow the PRD.
 
@@ -123,12 +124,12 @@ Keep these when re-syncing:
 1. Replace `docs/design-system/` with the new export (unzip; keep the folder name).
 2. `tokens.css` is picked up as-is. If tokens were **added or renamed**, update the `@theme` mapping in `app/globals.css`.
 3. Diff `docs/design-system/components/bundle.css` against `app/styles/wx-components.css` and port the changes, keeping the differences listed above.
-4. Re-read the changed `components/*/README.md` files and update the React components and `lib/strings.ts`.
+4. Re-read the changed `components/*/README.md` files and update the React components and `lib/i18n/uk.ts`.
 5. Check `/design-system` in light and dark, at 390px and 1280px.
 
 ## Open decisions
 
-- **Weather icon set — decided:** `lucide-react` (TC-STACK-06), 12 glyphs mapped from WMO codes in PRD Appendix B, stroke width 1.75, `currentColor`. Not installed yet: add it with the forecast change, then switch DayCard back to `code`. The 4 preview glyphs in `icons.tsx` go away then; the UI icons (search, location, info, alert) stay.
-- **CitySearch** is specified and styled (`wx-search` …) but not ported. It is behavioural (≈250 ms debounce, combobox keyboard model, `?lat=&lon=&name=` in the URL) and belongs with the search feature.
+- **Weather icon set — done:** `lucide-react` (TC-STACK-06), 12 glyphs mapped from WMO codes (`lib/forecast/wmo.ts`, PRD Appendix B), stroke width 1.75, `currentColor`, rendered by `WeatherIcon`.
+- **CitySearch — done** as an app component, `app/_components/CitySearch.tsx`, on the `wx-search` markup. The «Використати моє місцезнаходження» button comes with the geolocation feature.
 - **Sky background, hourly chart, map** are specified in `docs/design-system/README.md` but have no component spec yet.
 - `display` is 48px with no mobile step, so the hero wraps on narrow screens. The system defines no smaller size; raise it there rather than inventing one here.
