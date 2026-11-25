@@ -83,7 +83,7 @@ Lint SHALL report an error, citing TC-PURE-01, for any file under `lib/` that im
 - **THEN** no TC-PURE-01 error is reported for that file
 
 ### Requirement: Domain code stays framework-free at test time
-Unit tests SHALL run in a plain Node.js environment with no DOM, so domain code that touches DOM globals (`window`, `document`, `localStorage`) fails its tests even if lint is bypassed. Node.js still provides some browser-like globals, such as `navigator`; only the lint rule catches those. (TC-PURE-01)
+Unit tests SHALL run in a plain Node.js environment with no DOM. Tests can detect only executed, unguarded reads of unavailable globals, and only when those reads cause a test failure. Guarded or unexecuted DOM access may not fail tests. Node.js also provides some browser-like globals, such as `navigator`; lint enforces the prohibition on browser globals in `lib/`, including those available in Node.js. (TC-PURE-01)
 
 #### Scenario: DOM is unavailable in tests
 - **GIVEN** a unit test that evaluates `typeof document` and `typeof window`
