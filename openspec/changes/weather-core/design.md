@@ -103,6 +103,7 @@ The owner postponed Vercel to a separate `connect-vercel` change. Live end-to-en
 - **D-14 · Weekend accent by weekday.** Day cards are accented when they fall on a Saturday or Sunday, independent of which weekend the panel describes; on a Sunday, today's card is accented while the panel already covers next weekend (CodeRabbit, PR #2).
 - **D-15 · Search shows only the current query.** Each keystroke clears the previous suggestions at once, so Enter can't pick a stale result; an answer that arrives after the field lost focus stays hidden until focus returns (CodeRabbit, PR #2).
 - **D-16 · Review setup.** The PR description is free-form: the course homework template (author name, demo video, practices write-up) was replaced by a plain template, CodeRabbit's description check is off, and CodeRabbit reviews code and specs in English with per-area rules (`.coderabbit.yaml`). The repository gets no automatic CodeRabbit reviews (public, under 10 stars), so each review is requested with `@coderabbitai review`, once more before merge only if new code lands.
+- **D-17 · Fixes from the browser pass (task 9.4).** `ForecastSection` calls `connection()` before reading the clock: reading `searchParams` alone did not stop prerendering, and Next.js logged `blocking-prerender-current-time` on every forecast render. Day cards are at least 152px wide (export: 120px), because the widest badge («39 Некомфортно», 126px) stuck out of narrower cards; below ~1180px the row of seven scrolls instead (DESIGN.md, differences from the export).
 
 ## Risks / Trade-offs
 

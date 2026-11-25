@@ -58,7 +58,8 @@
 .wx-badge-lg { height: 32px; font-size: 15px; padding: 0 var(--space-3); }
 
 /* DayCard */
-.wx-days { display: grid; grid-template-columns: repeat(7, minmax(120px, 1fr)); gap: var(--space-3); overflow-x: auto; scroll-snap-type: x mandatory; padding: var(--space-4); }
+/* 152px, not the export's 120px: the widest md badge («39 Некомфортно», 126px) plus card padding and border. */
+.wx-days { display: grid; grid-template-columns: repeat(7, minmax(152px, 1fr)); gap: var(--space-3); overflow-x: auto; scroll-snap-type: x mandatory; padding: var(--space-4); }
 .wx-day { scroll-snap-align: start; display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-3);
   background: var(--surface-raised); border: 1px solid var(--line); border-radius: var(--radius-md); box-shadow: var(--shadow-card);
   border-top: 3px solid var(--line); }

@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import { getForecast } from "@/app/_data/open-meteo";
 import { DayCard, Notice, WeekendHighlight } from "@/components/design-system";
 import { firstShownDate, placeToday } from "@/lib/forecast/today";
@@ -10,11 +11,12 @@ import { isWeekendDate, upcomingWeekend, weekendSummary } from "@/lib/weekend";
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
 /**
- * The date the cards start from, read from the clock per request (this is a server component that
- * renders once per request, after the URL is read). Not taken from the data: a cached forecast can
- * outlive the place's midnight.
+ * The date the cards start from, read from the clock per request. Not taken from the data: a cached
+ * forecast can outlive the place's midnight. `connection()` keeps the clock read out of prerendering
+ * (reading `searchParams` alone doesn't, so Next.js would log `blocking-prerender-current-time`).
  */
-function startDate(forecast: Forecast): string {
+async function startDate(forecast: Forecast): Promise<string> {
+  await connection();
   return firstShownDate(forecast.days, placeToday(Date.now(), forecast.utcOffsetSeconds));
 }
 
@@ -49,7 +51,7 @@ export async function ForecastSection({ searchParams }: { searchParams: SearchPa
     );
   }
 
-  const today = startDate(forecast);
+  const today = await startDate(forecast);
   const days = forecast.days.filter((day) => day.date >= today).slice(0, 7);
   const weekend = upcomingWeekend(today);
   const summary = weekendSummary(forecast.days, weekend);

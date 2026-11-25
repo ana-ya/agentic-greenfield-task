@@ -117,7 +117,8 @@ Keep these when re-syncing:
 4. **ComfortBadge** — `role="img"` plus `aria-label`; `aria-label` on a bare `<span>` isn't reliably announced.
 5. **DayCard** — takes `code` as the export intended, and also accepts `null` figures (rendered «—») and `comfort={null}` (FR-COMFORT-09).
 6. **WeekendHighlight** — takes structured `saturday` / `sunday` values plus dates; the export's props are pre-formatted strings.
-7. **Comfort explanation** — exactly one Ukrainian sentence, at most 80 characters (FR-COMFORT-03). The export's sample («Тепло й сухо, легкий вітер. Гарний день для прогулянки.») is two sentences; follow the PRD.
+7. **Day-card minimum width** — `.wx-days` uses `minmax(152px, 1fr)` instead of the export's 120px, so the widest badge («39 Некомфортно») fits inside its card. Below ~1180px the row of seven scrolls instead of overflowing.
+8. **Comfort explanation** — exactly one Ukrainian sentence, at most 80 characters (FR-COMFORT-03). The export's sample («Тепло й сухо, легкий вітер. Гарний день для прогулянки.») is two sentences; follow the PRD.
 
 ## Re-syncing after a design-system update
 
