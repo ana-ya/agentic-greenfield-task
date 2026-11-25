@@ -36,4 +36,4 @@ None. `quality-gates` stays as is; this change must pass it.
 - **Changed:** `components/design-system/DayCard.tsx` (takes a WMO code), `ComfortBadge.tsx` (no-data variant), `WeekendHighlight.tsx` (verdict bands); `lib/comfort.ts` folds into `lib/scoring/`; `lib/strings.ts` → `lib/i18n/uk.ts`; DESIGN.md and AGENTS.md references.
 - **Dependencies:** `lucide-react` (runtime).
 - **External:** Open-Meteo forecast + geocoding APIs (keyless, free tier, called only from the server). Vercel is postponed to the separate `connect-vercel` change.
-- **Requirements:** FR-SHELL-01–04, FR-SEARCH-01–05, FR-LOC-01/02, FR-FORECAST-01/02/05–08, FR-COMFORT-01–09, NFR-I18N-01, NFR-API-01, NFR-COST-01, TC-DATA-01, TC-STACK-03/06, BC-BRAND-01–03, BC-PRIVACY-01–03. Also verified against NFR-A11Y-01/02 and NFR-OBS-01 with live data on the owner's machine.
+- **Requirements:** FR-SHELL-01–04, FR-SEARCH-01–05, FR-LOC-01/02, FR-FORECAST-01/02/05–08, FR-COMFORT-01–09, NFR-I18N-01, NFR-API-01, NFR-COST-01, TC-DATA-01, TC-STACK-03/06, BC-BRAND-01–03, BC-PRIVACY-01–03. NFR-A11Y-01/02 and NFR-OBS-01 are to be verified with live data on the owner's machine (tasks 11.1–11.3); not done yet.

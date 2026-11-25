@@ -5,7 +5,7 @@ import sundayToday from "../forecast/__fixtures__/forecast-sunday-today.json";
 import { normalizeForecast } from "../forecast/normalize";
 import type { ForecastDay } from "../forecast/types";
 import { strings } from "../i18n";
-import { upcomingWeekend, weekendSummary } from ".";
+import { isWeekendDate, upcomingWeekend, weekendSummary } from ".";
 
 const days = (raw: unknown): ForecastDay[] => {
   const result = normalizeForecast(raw);
@@ -99,5 +99,16 @@ describe("weekendSummary (FR-COMFORT-05/08)", () => {
     const forecastDays = days(lviv);
     const summary = weekendSummary(forecastDays, upcomingWeekend(forecastDays[0].date));
     expect(summary).toMatchObject({ kind: "scored", weekend: WEEKEND });
+  });
+});
+
+describe("isWeekendDate", () => {
+  it.each([
+    ["2026-11-27", false], // Friday
+    ["2026-11-28", true], // Saturday
+    ["2026-11-29", true], // Sunday, even when "this weekend" already means the next one
+    ["2026-11-30", false], // Monday
+  ])("%s → %s", (date, expected) => {
+    expect(isWeekendDate(date)).toBe(expected);
   });
 });

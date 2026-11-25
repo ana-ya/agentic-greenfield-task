@@ -19,6 +19,12 @@ function addDays(date: string, days: number): string {
   return d.toISOString().slice(0, 10);
 }
 
+/** Saturday or Sunday by the calendar: the day cards' weekend accent (DESIGN.md), whichever weekend it is. */
+export function isWeekendDate(date: string): boolean {
+  const weekday = dayOfWeek(date);
+  return weekday === 0 || weekday === 6;
+}
+
 /** Monday–Saturday → this week's Saturday + Sunday; Sunday → next week's (FR-COMFORT-06). */
 export function upcomingWeekend(placeToday: string): Weekend {
   const weekday = dayOfWeek(placeToday); // 0 = Sunday … 6 = Saturday

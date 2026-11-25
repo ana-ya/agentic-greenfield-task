@@ -30,6 +30,7 @@ export function CitySearch() {
   const [active, setActive] = useState(-1);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const inFlight = useRef<AbortController>(undefined);
+  const input = useRef<HTMLInputElement>(null);
 
   useEffect(
     () => () => {
@@ -43,7 +44,8 @@ export function CitySearch() {
     setSuggestions(list);
     setStatus(next);
     setActive(-1);
-    setOpen(next !== "idle");
+    // An answer that arrives after the field lost focus is kept, but not shown until focus returns.
+    setOpen(next !== "idle" && document.activeElement === input.current);
   }
 
   async function search(text: string) {
@@ -67,8 +69,10 @@ export function CitySearch() {
     setQuery(text);
     clearTimeout(timer.current);
     inFlight.current?.abort();
+    // Drop the previous query's suggestions at once, so Enter can't pick one while the new query is pending.
+    show("idle");
     const trimmed = text.trim();
-    if ([...trimmed].length < MIN_QUERY) return show("idle");
+    if ([...trimmed].length < MIN_QUERY) return;
     timer.current = setTimeout(() => void search(trimmed), DEBOUNCE_MS);
   }
 
@@ -109,6 +113,7 @@ export function CitySearch() {
       <div className="wx-field">
         <SearchIcon />
         <input
+          ref={input}
           className="wx-input"
           type="text"
           role="combobox"

@@ -1,12 +1,22 @@
 import { getForecast } from "@/app/_data/open-meteo";
 import { DayCard, Notice, WeekendHighlight } from "@/components/design-system";
+import { firstShownDate, placeToday } from "@/lib/forecast/today";
 import type { Forecast } from "@/lib/forecast/types";
 import { strings } from "@/lib/i18n";
 import { parseLocation } from "@/lib/location";
 import { comfortScore } from "@/lib/scoring/comfort";
-import { upcomingWeekend, weekendSummary } from "@/lib/weekend";
+import { isWeekendDate, upcomingWeekend, weekendSummary } from "@/lib/weekend";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
+
+/**
+ * The date the cards start from, read from the clock per request (this is a server component that
+ * renders once per request, after the URL is read). Not taken from the data: a cached forecast can
+ * outlive the place's midnight.
+ */
+function startDate(forecast: Forecast): string {
+  return firstShownDate(forecast.days, placeToday(Date.now(), forecast.utcOffsetSeconds));
+}
 
 /** Hero question, only while no place is active (FR-SHELL-03). */
 export async function Hero({ searchParams }: { searchParams: SearchParams }) {
@@ -39,8 +49,9 @@ export async function ForecastSection({ searchParams }: { searchParams: SearchPa
     );
   }
 
-  const days = forecast.days.slice(0, 7);
-  const weekend = upcomingWeekend(forecast.days[0].date);
+  const today = startDate(forecast);
+  const days = forecast.days.filter((day) => day.date >= today).slice(0, 7);
+  const weekend = upcomingWeekend(today);
   const summary = weekendSummary(forecast.days, weekend);
 
   return (
@@ -72,7 +83,7 @@ export async function ForecastSection({ searchParams }: { searchParams: SearchPa
             precipProb={day.precipProb}
             windKmh={day.windMax}
             comfort={comfortScore(day).value}
-            weekend={day.date === weekend.saturday || day.date === weekend.sunday}
+            weekend={isWeekendDate(day.date)}
           />
         ))}
       </section>
