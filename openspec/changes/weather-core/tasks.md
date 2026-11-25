@@ -44,15 +44,19 @@ Tasks marked **[owner]** need the repository owner's machine. Each group ends wi
 ## 8. Design-system updates
 
 - [x] 8.1 Add `WeatherIcon` (icon key → `lucide-react` icon, `role="img"` with the label, stroke 1.75); switch `DayCard` to take `code`; remove the 4 hand-drawn weather glyphs from `icons.tsx` and the now-unneeded `.fallowrc.jsonc` exemption if any becomes stale; verify `npm run verify` and `/design-system` renders the cards in fixture mode
-- [ ] 8.2 `ComfortBadge` accepts `score: number | null`; add the `wx-badge-none` style (surface-sunken, ink-muted, line-strong hairline) in `app/styles/wx-components.css`; show both on `/design-system`; verify visually in light and dark (fixture mode) and `npm run verify`
-- [ ] 8.3 Update `/design-system` page samples for the new props (verdict bands, no-data weekend Notice); verify it renders with a silent console
+- [x] 8.2 `ComfortBadge` accepts `score: number | null`; add the `wx-badge-none` style (surface-sunken, ink-muted, line-strong hairline) in `app/styles/wx-components.css`; show both on `/design-system`; verify `npm run verify` and the rendered HTML (the light/dark look is part of the browser pass, 9.4)
+- [x] 8.3 Update `/design-system` page samples for the new props (verdict bands, no-data weekend Notice); verify the rendered HTML in fixture mode (console checked in the browser pass, 9.4)
 
 ## 9. Page and interactions
 
-- [ ] 9.1 Rebuild the shell in `app/page.tsx`: header with product name and `ThemeIndicator` (design D-8), search area, footer with linked credits; verify in fixture mode: header and footer content per the app-shell scenarios, and the theme indicator follows an emulated `prefers-color-scheme` change without a reload and without a hydration warning
-- [ ] 9.2 Add `ForecastSection` inside an unkeyed `<Suspense>` with `ForecastSkeleton` (design D-2): empty → hero; invalid → info Notice and no fetch; ok → weekend panel or no-data Notice + seven `DayCard`s with badges; forecast failure → error Notice; verify each state in fixture mode (including the all-null fixture and a forced failure), with a silent console
-- [ ] 9.3 Implement `CitySearch` (design D-5): debounce, abort of stale requests, combobox keyboard model, lone-suggestion Enter, «Нічого не знайдено», failure Notice, selection via `router.push` in `startTransition`; verify in fixture mode: arrows/Enter/Escape, Enter on one vs several suggestions, out-of-order answers (delayed fixture), and that Back/Forward switch places without a full reload
-- [ ] 9.4 Check the layout at 390 px and 1280 px in light and dark (fixture mode): one column with a scrolling row of seven cards on mobile; centred ≤ 1200 px with seven cards in a row on desktop; record screenshots in the PR
+- [x] 9.1 Rebuild the shell in `app/page.tsx`: header with product name and `ThemeIndicator` (design D-8), search area, footer with linked credits; verify the rendered HTML in fixture mode (live theme switching is checked in 9.4)
+- [x] 9.2 Add `ForecastSection` inside an unkeyed `<Suspense>` with `ForecastSkeleton` (design D-2): empty → hero; invalid → info Notice and no fetch; ok → weekend panel or no-data Notice + seven `DayCard`s with badges; forecast failure → error Notice; verify each state's rendered HTML in fixture mode (including the all-null fixture, Sunday today, UTC−10 and a forced failure)
+- [x] 9.3 Implement `CitySearch` (design D-5): debounce, abort of stale requests, combobox keyboard model, lone-suggestion Enter, «Нічого не знайдено», failure Notice, selection via `router.push` in `startTransition`; verify `/api/geocode` with short, long, empty, failing and delayed queries (interaction is checked in 9.4)
+- [ ] 9.4 One browser pass in fixture mode (owner runs `WEATHER_FIXTURES=1 npm run dev`; agent uses the built-in browser at `http://localhost:3000`), with a silent console and no hydration warning throughout:
+  - theme: light and dark look of `/` and `/design-system`; the indicator follows an emulated `prefers-color-scheme` change without a reload
+  - states: hero, invalid link, normal week, Saturday without data, forced failure
+  - search: arrows/Enter/Escape, Enter on one vs several suggestions, a new query clears the old list at once, out-of-order answers (3-letter delayed fixture), no list after the field loses focus, Back/Forward switch places without a full reload; roles and names in the accessibility tree
+  - layout: a quick look at 390 px (one column, the seven cards scroll in one row) and 1280 px (centred ≤ 1200 px, seven cards in a row); no screenshots
 
 ## 10. Documentation
 
@@ -60,9 +64,15 @@ Tasks marked **[owner]** need the repository owner's machine. Each group ends wi
 
 ## 11. End-to-end verification with live data
 
-- [ ] 11.1 **[owner]** Start the app on your Mac with `npm run dev` (live Open-Meteo); then the agent records the core loop in the built-in browser at `http://localhost:3000`: type «Льв», choose Львів with the keyboard, see the weekend panel and seven cards; confirm the browser's network log shows only `localhost`, `document.cookie` is empty, the console is silent, and CLS < 0.1; attach the recording to the PR
+- [ ] 11.1 **[owner]** Start the app on your Mac with `npm run dev` (live Open-Meteo); then the agent runs the core loop in the built-in browser at `http://localhost:3000`: type «Льв», choose Львів with the keyboard, see the weekend panel and seven cards; confirm the network log shows only `localhost`, `document.cookie` is empty, the console is silent, and nothing visibly jumps when the forecast arrives
 - [ ] 11.2 With live data, confirm assumptions A1–A3 (dates, nulls, Ukrainian names): a Ukrainian city, «Kraków», and a far-west place (e.g. Honolulu) show correct place-local dates; also open a shared URL, an invalid URL, and use Back/Forward
-- [ ] 11.3 Final checks: CI green, `npm run verify` under 60 s in CI, client JS for `/` measured from the build output and recorded, `openspec validate weather-core --strict` passes; record results in the PR
+- [ ] 11.3 Final checks: CI green on the PR; `openspec validate weather-core --strict` passes
+
+## Dropped from this change (decided 2026-11-25, see design.md "Decisions made during apply")
+
+- Screenshots and a recording attached to the PR; the checks themselves stay in 9.4 and 11.1.
+- A separate visual task for `/design-system` (internal page); folded into 9.4.
+- Measuring `npm run verify` time in CI, client JS size, and CLS with a tool; a visual check of layout shift stays in 11.1.
 
 ## Workflow follow-up
 

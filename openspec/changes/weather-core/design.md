@@ -96,19 +96,27 @@ When `WEATHER_FIXTURES=1` **and** `NODE_ENV !== "production"`, `app/_data/open-m
 ### D-10 · Live verification on the owner's machine (Vercel postponed)
 The owner postponed Vercel to a separate `connect-vercel` change. Live end-to-end checks run on the owner's Mac instead: the owner starts `npm run dev`, which reaches Open-Meteo directly, and the agent drives the app's built-in browser at `http://localhost:3000`. Fixture mode stays for agent-side development.
 
+### Decisions made during apply (2026-11-25)
+- **D-11 · Leaner verification.** One browser pass in fixture mode (task 9.4) and one live pass (11.1–11.2) replace per-task browser checks. Dropped as low value for a demo: screenshots and a recording in the PR, a separate visual task for the internal `/design-system` page, and measuring CI time, client JS size and CLS with a tool. Unit tests, `npm run verify`, rendered-HTML checks in fixture mode and CI remain the evidence.
+- **D-12 · Search failure answers HTTP 200.** `/api/geocode` returns `{ error: true }` with HTTP 200 and `Cache-Control: no-store` on upstream failure. A 4xx/5xx would be logged in the browser console, and FR-SEARCH-08 requires a silent console.
+- **D-13 · "Today" comes from the clock, not the data.** `ForecastSection` works out the place's current date per request from the place's UTC offset (`lib/forecast/today.ts`) and starts the cards and the weekend from it, because a forecast cached before the place's midnight would otherwise show yesterday (CodeRabbit, PR #2). If the data doesn't cover that date (fixtures), the data's first day is used.
+- **D-14 · Weekend accent by weekday.** Day cards are accented when they fall on a Saturday or Sunday, independent of which weekend the panel describes; on a Sunday, today's card is accented while the panel already covers next weekend (CodeRabbit, PR #2).
+- **D-15 · Search shows only the current query.** Each keystroke clears the previous suggestions at once, so Enter can't pick a stale result; an answer that arrives after the field lost focus stays hidden until focus returns (CodeRabbit, PR #2).
+- **D-16 · Review setup.** The PR description is free-form: the course homework template (author name, demo video, practices write-up) was replaced by a plain template, CodeRabbit's description check is off, and CodeRabbit reviews code and specs in English with per-area rules (`.coderabbit.yaml`). The repository gets no automatic CodeRabbit reviews (public, under 10 stars), so each review is requested with `@coderabbitai review`, once more before merge only if new code lands.
+
 ## Risks / Trade-offs
 
 - **[`daily.time` format]** The docs don't show a daily example. The design assumes `YYYY-MM-DD` place-local dates. → The normaliser validates the format and fails to the error Notice. The first live check on the owner's Mac confirms the real shape, and if it differs only the normaliser changes.
 - **[`use cache` and thrown errors]** The design relies on failed fetches not being cached. → Spec scenario "Failure is not cached", checked with live data by forcing one failure: an invalid but in-range location, or a temporarily wrong API host via fixture mode.
 - **[Shared hosting IPs and the Open-Meteo per-IP limit, once deployed]** → Server caching (15 min per place, 24 h per query) keeps call volume tiny for a demo. Failures degrade to Notices.
-- **[Combobox accessibility done by hand]** → The behaviour follows the ARIA 1.2 pattern, and the MCP recording includes keyboard-only use plus an accessibility-tree check of roles and states.
+- **[Combobox accessibility done by hand]** → The behaviour follows the ARIA 1.2 pattern, and the browser pass (task 9.4) covers keyboard-only use plus an accessibility-tree check of roles and states.
 - **[Agent can't see live data]** → Fixture mode (D-9) for development; live checks on the owner's Mac (D-10).
-- **[Bundle size]** `lucide-react` with named imports tree-shakes to the 12 icons. → Measured on the build output in the final task.
+- **[Bundle size]** `lucide-react` with named imports tree-shakes to the 12 icons. → Not measured in this change (D-11); named imports keep it to the 12 icons used.
 
 ## Migration Plan
 
 1. Implement on `feat/weather-core` in task order, keeping `npm run verify` green after each group.
-2. Verify end to end with live data on the owner's Mac (recording), then merge. Mark the PRD rows shipped and archive the change.
+2. Verify end to end with live data on the owner's Mac, then merge. Mark the PRD rows shipped and archive the change.
 3. **Rollback:** revert the merge commit. No data or schema is involved.
 
 ## Assumptions
