@@ -64,8 +64,8 @@ Tasks marked **[owner]** need the repository owner's machine. Each group ends wi
 
 ## 11. End-to-end verification with live data
 
-- [ ] 11.1 **[owner]** Start the app on your Mac with `npm run dev` (live Open-Meteo); then the agent runs the core loop in the built-in browser at `http://localhost:3000`: type «Льв», choose Львів with the keyboard, see the weekend panel and seven cards; confirm the network log shows only `localhost`, `document.cookie` is empty, the console is silent, and nothing visibly jumps when the forecast arrives
-- [ ] 11.2 With live data, confirm assumptions A1–A3 (dates, nulls, Ukrainian names): a Ukrainian city, «Kraków», and a far-west place (e.g. Honolulu) show correct place-local dates; also open a shared URL, an invalid URL, and use Back/Forward
+- [x] 11.1 **[owner]** Start the app on your Mac with `npm run dev` (live Open-Meteo); then the agent runs the core loop in the built-in browser at `http://localhost:3000`: type «Льв», choose Львів with the keyboard, see the weekend panel and seven cards; confirm the network log shows only `localhost`, `document.cookie` is empty, the console is silent, and nothing visibly jumps when the forecast arrives
+- [x] 11.2 With live data, confirm assumptions A1–A3 (dates, nulls, Ukrainian names): a Ukrainian city, «Kraków», and a far-west place (e.g. Honolulu) show correct place-local dates; also open a shared URL, an invalid URL, and use Back/Forward
 - [ ] 11.3 Final checks: CI green on the PR; `openspec validate weather-core --strict` passes
 
 ## Dropped from this change (decided 2026-11-25, see design.md "Decisions made during apply")

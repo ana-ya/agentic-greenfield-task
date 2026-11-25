@@ -124,7 +124,7 @@ The owner postponed Vercel to a separate `connect-vercel` change. Live end-to-en
 
 | ID | Assumption | Checked by |
 | --- | --- | --- |
-| A1 | Open-Meteo `daily.time` values are `YYYY-MM-DD` in the place's time zone | Normaliser validation + first live run |
-| A2 | Missing values arrive as `null` inside the arrays (not as absent arrays) | Normaliser treats both as missing; live run |
-| A3 | `language=uk` returns Ukrainian names and regions for Ukrainian places and falls back to local names elsewhere | Live search for «Львів», «Kraków» (task 11.2) |
+| A1 | Open-Meteo `daily.time` values are `YYYY-MM-DD` in the place's time zone | Confirmed live 2026-11-25: Kiritimati (UTC+14) starts on Thursday while Kyiv is on Wednesday evening; Львів, Kraków, Honolulu start on the place's today |
+| A2 | Missing values arrive as `null` inside the arrays (not as absent arrays) | Not observed live (no gaps in the places checked); the normaliser treats both forms as missing, covered by unit tests |
+| A3 | `language=uk` returns Ukrainian names and regions for Ukrainian places and falls back to local names elsewhere | Confirmed live: «Lviv» → «Львів», «Kraków» → «Краків», «Honolulu» → «Гонолулу», local names where no Ukrainian exists («Krakow am See») |
 | A4 | The owner can run `npm run dev` on their Mac (Node 24, network access to Open-Meteo) for the live checks | Task 11.1 |
