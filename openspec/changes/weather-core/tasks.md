@@ -75,7 +75,8 @@ Tasks marked **[owner]** need the repository owner's machine. Each group ends wi
   - **Result (2026-11-25):** «Льв» returned 8 live suggestions; ArrowDown + Enter opened Львів with the weekend panel and seven cards. Resource hosts: `localhost:3000` only; `document.cookie` empty; local/session storage empty; no app errors in the console (only dev-server HMR reconnect messages); cumulative layout shift 0.019 (PerformanceObserver), below 0.1
 - [x] 11.2 With live data, check assumptions A1–A3 (dates, nulls, Ukrainian names): a Ukrainian city, «Kraków», and a far-west place (e.g. Honolulu) show correct place-local dates; also open a shared URL, an invalid URL, and use Back/Forward
   - **Result (2026-11-25):** A1 confirmed (Kiritimati, UTC+14, starts on Thursday while Kyiv is on Wednesday; Львів, Kraków, Honolulu start on the place's today). A3 confirmed («Lviv» → «Львів», «Kraków» → «Краків», «Honolulu» → «Гонолулу»; «Krakow am See» keeps its local name). **A2 not confirmed live**: no gaps occurred in the places checked; the normaliser's handling of both forms is covered by unit tests only. Shared URL, URL without a name (coordinate label), invalid URL (`lat=95`) and Back/Forward all behaved as specified
-- [ ] 11.3 Final checks: CI green on the PR; the `npm run verify` step's duration in the CI log is under 60 s (quality-gates, NFR-DX-01); `openspec validate weather-core --strict` passes
+- [x] 11.3 Final checks: CI green on the PR; the `npm run verify` step's duration in the CI log is under 60 s (quality-gates, NFR-DX-01); `openspec validate weather-core --strict` passes
+  - **Result (2026-11-26):** CI run on `f12956a` green; `npm run verify` step 19 s (install 11 s); `openspec validate weather-core --strict` passes
 
 ## Dropped from this change (decided 2026-11-25, see design.md "Decisions made during apply")
 
