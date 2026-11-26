@@ -42,7 +42,10 @@ const eslintConfig = defineConfig([
         "error",
         {
           // checkGlobalObject also catches access through the global object, e.g. globalThis.document.
+          // The default objects are globalThis, self and window; Node's `global` is added so that
+          // global.navigator is caught too.
           checkGlobalObject: true,
+          globalObjects: ["global"],
           globals: ["window", "document", "navigator", "localStorage", "sessionStorage", "location"].map(
             (name) => ({ name, message: `TC-PURE-01: no browser global \`${name}\` — ${PURE_HINT}` }),
           ),

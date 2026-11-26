@@ -57,6 +57,13 @@ Tasks marked **[owner]** need the repository owner's machine. Each group ends wi
   - states: hero, invalid link, normal week, Saturday without data, forced failure
   - search: arrows/Enter/Escape, Enter on one vs several suggestions, a new query clears the old list at once, out-of-order answers (3-letter delayed fixture), no list after the field loses focus, Back/Forward switch places without a full reload; roles and names in the accessibility tree
   - layout: a quick look at 390 px (one column, the seven cards scroll in one row) and 1280 px (centred ≤ 1200 px, seven cards in a row); no screenshots
+  - **Result (2026-11-25):**
+    - theme: both themes render; the indicator changed to «Світла тема» after an emulated scheme change with no reload; `/design-system` shows the «Немає даних» badge readable in light and dark
+    - states: hero, invalid link («Не вдалося відкрити це місце…»), normal week, Київ without Saturday data (no-data Notice and badge), forced failure (error Notice) all render; no hydration warning
+    - search: the stale «Льв» request was aborted and only «Львів» was shown; typing cleared the old list at once; Enter with nothing highlighted selected nothing; Enter on the lone suggestion selected Львів; arrows wrap; Escape closed the list and kept the text; answers and failures that arrived after blur stayed hidden until refocus; «Нічого не знайдено» and the search error Notice shown; combobox/listbox/option roles, `aria-expanded`, `aria-activedescendant` and `aria-selected` correct; flag `aria-hidden`
+    - history: empty ↔ Львів ↔ Ужгород with Back/Forward, and a page marker survived (no full reload)
+    - layout: 390 px: page overflow 0, the row of seven scrolls; 1280 px: main 1200 px, seven cards in one row, no row scroll
+    - found and fixed (D-17): a `blocking-prerender-current-time` console error on every forecast render, and the comfort badge overflowing cards narrower than 152 px; rechecked afterwards: no new console errors, no badge overflow at 390 or 1280 px
 
 ## 10. Documentation
 
@@ -65,14 +72,16 @@ Tasks marked **[owner]** need the repository owner's machine. Each group ends wi
 ## 11. End-to-end verification with live data
 
 - [x] 11.1 **[owner]** Start the app on your Mac with `npm run dev` (live Open-Meteo); then the agent runs the core loop in the built-in browser at `http://localhost:3000`: type «Льв», choose Львів with the keyboard, see the weekend panel and seven cards; confirm the network log shows only `localhost`, `document.cookie` is empty, the console is silent, and nothing visibly jumps when the forecast arrives
-- [x] 11.2 With live data, confirm assumptions A1–A3 (dates, nulls, Ukrainian names): a Ukrainian city, «Kraków», and a far-west place (e.g. Honolulu) show correct place-local dates; also open a shared URL, an invalid URL, and use Back/Forward
-- [ ] 11.3 Final checks: CI green on the PR; `openspec validate weather-core --strict` passes
+  - **Result (2026-11-25):** «Льв» returned 8 live suggestions; ArrowDown + Enter opened Львів with the weekend panel and seven cards. Resource hosts: `localhost:3000` only; `document.cookie` empty; local/session storage empty; no app errors in the console (only dev-server HMR reconnect messages); cumulative layout shift 0.019 (PerformanceObserver), below 0.1
+- [x] 11.2 With live data, check assumptions A1–A3 (dates, nulls, Ukrainian names): a Ukrainian city, «Kraków», and a far-west place (e.g. Honolulu) show correct place-local dates; also open a shared URL, an invalid URL, and use Back/Forward
+  - **Result (2026-11-25):** A1 confirmed (Kiritimati, UTC+14, starts on Thursday while Kyiv is on Wednesday; Львів, Kraków, Honolulu start on the place's today). A3 confirmed («Lviv» → «Львів», «Kraków» → «Краків», «Honolulu» → «Гонолулу»; «Krakow am See» keeps its local name). **A2 not confirmed live**: no gaps occurred in the places checked; the normaliser's handling of both forms is covered by unit tests only. Shared URL, URL without a name (coordinate label), invalid URL (`lat=95`) and Back/Forward all behaved as specified
+- [ ] 11.3 Final checks: CI green on the PR; the `npm run verify` step's duration in the CI log is under 60 s (quality-gates, NFR-DX-01); `openspec validate weather-core --strict` passes
 
 ## Dropped from this change (decided 2026-11-25, see design.md "Decisions made during apply")
 
 - Screenshots and a recording attached to the PR; the checks themselves stay in 9.4 and 11.1.
 - A separate visual task for `/design-system` (internal page); folded into 9.4.
-- Measuring `npm run verify` time in CI, client JS size, and CLS with a tool; a visual check of layout shift stays in 11.1.
+- Measuring client JS size. (CI duration stays in 11.3: the quality-gates spec requires it. Layout shift was measured in 11.1 anyway.)
 
 ## Workflow follow-up
 
