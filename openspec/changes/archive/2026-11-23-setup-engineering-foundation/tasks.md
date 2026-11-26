@@ -41,14 +41,13 @@ Tasks marked **[owner]** need the repository owner (account or settings access).
 
 ## 6. Deployment (TC-DEPLOY-01, BC-DEMO-01)
 
-- [ ] 6.1 **[owner]** Import `ana-ya/agentic-greenfield-task` into Vercel (Next.js preset, production branch `main`, no environment variables); verify the first production build succeeds and its log shows Node 24.x — *Deferred by the owner until the app has something to demo (with `weather-core`). This change stays unarchived until then.*
-- [ ] 6.2 **[owner]** Turn off Deployment Protection for previews on this project (design D-6, assumption A2); verify a preview URL opens in a private window without a Vercel sign-in page — *Deferred by the owner until the app has something to demo (with `weather-core`). This change stays unarchived until then.*
-- [ ] 6.3 On this change's PR, confirm: the Vercel status links a preview URL; a new commit produces a new preview; the preview's browser console has no errors or warnings on load (NFR-OBS-01 baseline for the placeholder page). Record the preview URL in the PR — *Deferred by the owner until the app has something to demo (with `weather-core`). This change stays unarchived until then.*
+> **Moved to `weather-core` (owner's decision, 2026-11-24):** tasks 6.1–6.3 (import into Vercel, public previews, preview check) and the `deployment` spec. 6.4 stays here: the AGENTS.md section exists and is marked "planned, not connected yet".
+
 - [x] 6.4 Add a "Deployments" section to `AGENTS.md`: where previews appear (the PR's Vercel status), the rule that every milestone demo uses a preview opened in a private window, and a placeholder for the production URL; verify the section reads correctly
 
 ## 7. Integration check (before merge)
 
-- [ ] 7.1 On the final PR head, confirm together: CI verification green, Vercel preview public, `npm run verify` green locally, and `openspec validate setup-engineering-foundation --strict` passes; record the four results in the PR — *CI, local verify and strict validation pass; the Vercel part waits for 6.1–6.3.*
+- [x] 7.1 On the final PR head, confirm together: CI verification green, `npm run verify` green locally, and `openspec validate setup-engineering-foundation --strict` passes — *Done: PR #1 merged as `ade6fd3` with CI green; the Vercel part moved to `weather-core`.*
 
 ## Workflow follow-up
 

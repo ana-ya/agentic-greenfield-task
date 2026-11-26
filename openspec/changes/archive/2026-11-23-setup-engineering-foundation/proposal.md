@@ -11,7 +11,7 @@ Every later change in the roadmap (`docs/implementation-roadmap.md`, M0) has to 
 - Enforce TC-PURE-01: lint rejects React, Next.js (static and dynamic imports) and browser globals inside `lib/`, and unit tests run without a DOM.
 - Pin Node.js 24 (LTS) for local work, CI and hosting (TC-RUNTIME-01).
 - Run `npm run verify` in GitHub Actions on every pull request and every push to `main`, with the result shown on the PR (NFR-DX-02).
-- Connect the repo to Vercel: a preview URL per pull request, production from `main`, publicly viewable, no secrets required (TC-DEPLOY-01, BC-DEMO-01, NFR-COST-01).
+- ~~Connect the repo to Vercel~~: moved to `weather-core` (see Capabilities).
 - Repository hygiene: ignore the `.fallow/` cache and remove the stray committed `types/` folder along with the excludes that work around it.
 - Add first unit tests for the existing pure helpers (`lib/format.ts`, `lib/comfort.ts`, `lib/cx.ts`). They prove the runner works and pin down current behaviour.
 - **BREAKING (tooling only):** the project requires Node.js 24. `@types/node` moves from `^20` to `^24`.
@@ -22,7 +22,7 @@ Not in this change (each has its own roadmap change): the strings move to `lib/i
 
 ### New Capabilities
 - `quality-gates`: the repository's verification contract. Which commands exist, what they check, how they fail, how fast they run, which runtime they need, how framework-free `lib/` is enforced, and that every pull request is checked by an independent CI run.
-- `deployment`: how the app reaches the web. Preview per pull request, production from `main`, public access, no secrets.
+- ~~`deployment`~~: *moved to the `weather-core` change on 2026-11-24 by the owner's decision. Vercel is connected once the app has something to demo, so this change doesn't claim previews that don't exist yet.*
 
 ### Modified Capabilities
 None. There are no existing specs (`openspec/specs/` is empty).

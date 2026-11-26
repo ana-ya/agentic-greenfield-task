@@ -1,27 +1,27 @@
 import { useId } from "react";
 import { hiLo, temp, weekday, weekendRange } from "@/lib/format";
-import { strings } from "@/lib/strings";
+import { strings } from "@/lib/i18n";
 import { cx } from "@/lib/cx";
 import { ComfortBadge } from "./ComfortBadge";
 
 export interface WeekendDay {
-  hi: number;
-  lo: number;
-  /** Precipitation probability, %. */
-  precipProb: number;
+  hi: number | null;
+  lo: number | null;
+  /** Precipitation probability, %; `null` renders «—». */
+  precipProb: number | null;
 }
 
 export interface WeekendHighlightProps {
-  /** Verdict title, e.g. strings.weekend.worthIt("Львів"). */
+  /** Verdict title, e.g. strings.weekend.verdict.good("Львів"). */
   title: string;
   /** Saturday and Sunday as place-local "YYYY-MM-DD". */
   saturdayDate: string;
   sundayDate: string;
   /** Averaged weekend comfort, 0–100. */
   score: number;
-  /** Combined weekend hi / lo. */
-  hi: number;
-  lo: number;
+  /** Combined weekend hi / lo; `null` renders «—». */
+  hi: number | null;
+  lo: number | null;
   /** One calm Ukrainian sentence. */
   explanation: string;
   saturday: WeekendDay;

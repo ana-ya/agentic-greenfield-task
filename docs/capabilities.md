@@ -2,7 +2,7 @@
 
 > **Status: agreed (2026-11-23).** Analysis of `docs/requirements.md` (PRD, updated 2026-11-23) and `docs/product-brief.md`, checked against `DESIGN.md`, `docs/design-system/` and the code already in the repo.
 > **2026-11-23:** the contradictions in §6 were fixed, and all 16 decisions (D1–D16) are resolved — see [implementation-roadmap.md](implementation-roadmap.md#decisions) and the PRD change log. The missing requirements in §5 are now PRD rows.
-> Next step after sign-off: one OpenSpec change per roadmap slice. The first, `setup-engineering-foundation`, exists in `openspec/changes/`; don't recreate it.
+> Next step after sign-off: one OpenSpec change per roadmap slice. The first, `setup-engineering-foundation`, is shipped and archived (`openspec/changes/archive/`); its `quality-gates` spec now lives in `openspec/specs/`. Next: `weather-core`.
 
 ## 1. Capability map
 
@@ -24,7 +24,7 @@ Twelve capabilities. Ten carry the PRD's capability names. Two are proposed spli
 | 11 | `bottom-jokes` | FR-JOKES-01, 02 | `bottom-jokes` | 1 | after 1 |
 | 12 | `weekend-compare` | FR-COMPARE-01 … 04 | `weekend-compare` (MVP) | 2, 4, 5, 6 | last |
 
-**Already built** (from the design-system integration): tokens and themes, `Button`, `ComfortBadge`, `Notice`, `DayCard`, `WeekendHighlight`, `CompareTable`, comfort *levels* (`lib/comfort.ts`), place-local date formatting (`lib/format.ts`), centralised strings (`lib/strings.ts`). The remaining work is mostly data, state and behaviour, not visual design.
+**Already built** (from the design-system integration): tokens and themes, `Button`, `ComfortBadge`, `Notice`, `DayCard`, `WeekendHighlight`, `CompareTable`, comfort *levels* (`lib/comfort.ts`), place-local date formatting (`lib/format.ts`), centralised strings (`lib/strings.ts`, moved to `lib/i18n/uk.ts` by `weather-core`). The remaining work is mostly data, state and behaviour, not visual design.
 
 ## 2. Capabilities in detail
 
@@ -189,7 +189,7 @@ All fixed in the documents; see the change log at the end of `docs/requirements.
 | FR-SEARCH-06 | Cited by the brief, missing from the PRD | Added | PRD |
 | FR-COMFORT-03 | One sentence ≤ 80 chars, but the design-system sample is two sentences | PRD rule wins; recorded in DESIGN.md; preview sample fixed | DESIGN.md, `/design-system` |
 
-**Not a contradiction — implementation pending:** NFR-I18N-01 puts strings in `lib/i18n/uk.ts` + `en.ts`, while the code still has `lib/strings.ts`. The move is scheduled in M0 (`add-app-shell`). DESIGN.md and AGENTS.md describe the code as it is today and will follow the move.
+**Resolved by `weather-core`:** strings now live in `lib/i18n/uk.ts` with a type-checked `en.ts` (NFR-I18N-01), and DESIGN.md and AGENTS.md point there.
 
 ## 7. Requirement coverage
 
@@ -232,7 +232,7 @@ Added with the 2026-11-23 decisions:
 | --- | --- |
 | FR-SHELL-04 | app-shell |
 | FR-CLOCK-02 | top-clock |
-| FR-SEARCH-07 | city-search |
+| FR-SEARCH-07, FR-SEARCH-08 | city-search |
 | FR-LOC-01, FR-LOC-02 | active-location |
 | FR-FORECAST-06, 07, 08 | forecast |
 | FR-COMFORT-06, 08 | weekend-highlight |

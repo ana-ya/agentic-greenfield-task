@@ -6,7 +6,7 @@
  * Differences from the source bundle — keep them when re-syncing:
  *   - no Google Fonts @import: fonts are self-hosted via @fontsource (privacy requirement);
  *   - no `body` rule and no `.wx-stage` (preview-only); base styles live in globals.css;
- *   - «Найкращий вибір» is rendered from lib/strings.ts as `.wx-best-label`,
+ *   - «Найкращий вибір» is rendered from lib/i18n/uk.ts as `.wx-best-label`,
  *     not injected by CSS `::after`, so every UI string stays in one module.
  *
  * Values come from tokens.css; nothing here re-declares a token.
@@ -54,10 +54,12 @@
 .wx-badge-good { background: var(--comfort-good); color: var(--on-comfort-good); }
 .wx-badge-fair { background: var(--comfort-fair); color: var(--on-comfort-fair); box-shadow: inset 0 0 0 1px var(--line-strong); }
 .wx-badge-poor { background: var(--comfort-poor); color: var(--on-comfort-poor); }
+.wx-badge-none { background: var(--surface-sunken); color: var(--ink-muted); box-shadow: inset 0 0 0 1px var(--line-strong); }
 .wx-badge-lg { height: 32px; font-size: 15px; padding: 0 var(--space-3); }
 
 /* DayCard */
-.wx-days { display: grid; grid-template-columns: repeat(7, minmax(120px, 1fr)); gap: var(--space-3); overflow-x: auto; scroll-snap-type: x mandatory; padding: var(--space-4); }
+/* 152px, not the export's 120px: the widest md badge («39 Некомфортно», 126px) plus card padding and border. */
+.wx-days { display: grid; grid-template-columns: repeat(7, minmax(152px, 1fr)); gap: var(--space-3); overflow-x: auto; scroll-snap-type: x mandatory; padding: var(--space-4); }
 .wx-day { scroll-snap-align: start; display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-3);
   background: var(--surface-raised); border: 1px solid var(--line); border-radius: var(--radius-md); box-shadow: var(--shadow-card);
   border-top: 3px solid var(--line); }

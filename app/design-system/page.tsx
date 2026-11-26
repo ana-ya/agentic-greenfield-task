@@ -1,18 +1,15 @@
 import type { Metadata } from "next";
 import {
   Button,
-  ClearIcon,
-  CloudyIcon,
   ComfortBadge,
   CompareTable,
   DayCard,
   LocationIcon,
   Notice,
-  PartlyCloudyIcon,
-  RainIcon,
+  WeatherIcon,
   WeekendHighlight,
 } from "@/components/design-system";
-import { strings } from "@/lib/strings";
+import { strings } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: `Design system · ${strings.appName}`,
@@ -93,12 +90,13 @@ export default function DesignSystemPage() {
           {[86, 58, 22].map((s) => (
             <ComfortBadge key={`lg-${s}`} score={s} size="lg" />
           ))}
+          <ComfortBadge score={null} />
         </div>
       </Section>
 
       <Section title="WeekendHighlight">
         <WeekendHighlight
-          title={strings.weekend.worthIt("Львів")}
+          title={strings.weekend.verdict.good("Львів")}
           saturdayDate="2026-11-28"
           sundayDate="2026-11-29"
           score={78}
@@ -108,14 +106,48 @@ export default function DesignSystemPage() {
           saturday={{ hi: 13, lo: 5, precipProb: 5 }}
           sunday={{ hi: 12, lo: 6, precipProb: 15 }}
         />
+        <WeekendHighlight
+          title={strings.weekend.verdict.fair("Ужгород")}
+          saturdayDate="2026-11-28"
+          sundayDate="2026-11-29"
+          score={55}
+          hi={9}
+          lo={4}
+          explanation={strings.comfort.rationale.rain}
+          saturday={{ hi: 9, lo: 4, precipProb: 60 }}
+          sunday={{ hi: 8, lo: 5, precipProb: null }}
+        />
+        <WeekendHighlight
+          title={strings.weekend.verdict.poor("Київ")}
+          saturdayDate="2026-11-28"
+          sundayDate="2026-11-29"
+          score={24}
+          hi={2}
+          lo={-5}
+          explanation={strings.comfort.rationale.coldStrong}
+          saturday={{ hi: 2, lo: -5, precipProb: 10 }}
+          sunday={{ hi: 1, lo: -4, precipProb: 20 }}
+        />
+        <Notice title={strings.weekend.unavailable} />
       </Section>
 
       <Section title="DayCard">
         <div className="wx-days !p-0">
-          <DayCard date="2026-11-26" hi={11} lo={4} icon={<CloudyIcon label="Хмарно" />} precipProb={20} windKmh={14} comfort={64} />
-          <DayCard date="2026-11-27" hi={9} lo={3} icon={<RainIcon label="Дощ" />} precipProb={80} windKmh={22} comfort={31} />
-          <DayCard date="2026-11-28" hi={13} lo={5} icon={<ClearIcon label="Ясно" />} precipProb={5} windKmh={8} comfort={84} weekend />
-          <DayCard date="2026-11-29" hi={12} lo={6} icon={<PartlyCloudyIcon label="Мінлива хмарність" />} precipProb={15} windKmh={11} comfort={72} weekend />
+          <DayCard date="2026-11-26" hi={11} lo={4} code={3} precipProb={20} windKmh={14} comfort={64} />
+          <DayCard date="2026-11-27" hi={9} lo={3} code={63} precipProb={80} windKmh={22} comfort={31} />
+          <DayCard date="2026-11-28" hi={13} lo={5} code={0} precipProb={5} windKmh={8} comfort={84} weekend />
+          <DayCard date="2026-11-29" hi={12} lo={6} code={2} precipProb={15} windKmh={11} comfort={72} weekend />
+          <DayCard date="2026-11-30" hi={null} lo={null} code={null} precipProb={null} windKmh={null} comfort={null} />
+        </div>
+      </Section>
+
+      <Section title="WeatherIcon">
+        <div className="flex flex-wrap items-center gap-4 [&_svg]:size-8">
+          {[0, 2, 3, 45, 51, 61, 65, 66, 71, 95].map((code) => (
+            <WeatherIcon key={code} code={code} />
+          ))}
+          <WeatherIcon code={0} isDay={false} />
+          <WeatherIcon code={2} isDay={false} />
         </div>
       </Section>
 
@@ -132,6 +164,10 @@ export default function DesignSystemPage() {
       <Section title="Notice">
         <div className="flex flex-col gap-3">
           <Notice title={strings.search.empty}>{strings.search.emptyHint}</Notice>
+          <Notice title={strings.location.invalid} />
+          <Notice tone="error" title={strings.search.failed}>
+            {strings.search.failedHint}
+          </Notice>
           <Notice tone="error" title={strings.errors.forecast}>
             {strings.errors.forecastHint}
           </Notice>

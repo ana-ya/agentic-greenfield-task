@@ -1,9 +1,9 @@
-# CodeRabbit — рев'ю домашнього завдання курсу «Agentic Engineering: Greenfield».
-# Стек у студентів будь-який, тому рев'ю фокусується на ДОКАЗАХ застосування
-# агентних інженерних практик, а не на конкретній технології.
-# Перевірки дорадчі (не блокують мердж) — це навчальний фідбек, не гейт.
-language: "uk-UA"
-tone_instructions: "Ментор курсу Agentic Engineering (greenfield). Українською, дружньо, але вимогливо. Оцінюй процес (застосовані агентні практики), а не лише код. Стек будь-який — не вимагай конкретної технології."
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+# CodeRabbit code review for Weather Explorer (Next.js 16, React 19, TypeScript, OpenSpec).
+# Advisory only: it never blocks a merge. It reviews code and specs, not the PR description.
+# Reference: https://docs.coderabbit.ai/reference/configuration
+language: "en-US"
+tone_instructions: "Senior reviewer. Plain, concise English. Report real defects and spec mismatches with a concrete fix; skip style nits that lint already catches. Say when a finding is uncertain."
 
 reviews:
   profile: "assertive"
@@ -13,19 +13,49 @@ reviews:
   auto_review:
     enabled: true
     drafts: false
+  pre_merge_checks:
+    # The PR description is free-form; don't check it against a template.
+    description:
+      mode: "off"
+
+  # Not worth reviewing: a read-only design export, archived specs, generated files.
+  path_filters:
+    - "!docs/design-system/**"
+    - "!openspec/changes/archive/**"
+    - "!next-env.d.ts"
+    - "!skills-lock.json"
+
   path_instructions:
-    - path: "**"
-      instructions: >-
-        Це здача домашнього завдання курсу «Agentic Engineering: Greenfield».
-        Студент міг використати будь-який стек. Прочитай опис Pull Request разом зі
-        змінами й оціни ДОКАЗИ:
-        (1) вказане справжнє імʼя автора;
-        (2) є посилання на відео-демо (1–2 хв);
-        (3) є ЗМІСТОВНИЙ опис застосованих практик Agentic Engineering — контекст-
-        інженерія / AGENTS.md, цикли (loops), maker≠checker / суб-агенти,
-        специфікації-тести-evals, верифікація, які інструменти й MCP використано,
-        що вирішував студент, а що агент;
-        (4) результат доведено до кінця, а не «згенеровано і кинуто».
-        Якщо чогось із (1)–(4) бракує — ввічливо й конкретно скажи, чого саме.
-        Код рев'юй по суті (очевидні баги, безпека секретів, ясність), без причіпок
-        до стилю, який і так ловить лінтер. Хвали те, що зроблено інженерно.
+    - path: "lib/**"
+      instructions: |
+        Framework-free domain code (TC-PURE-01): no React, Next.js or browser globals; lint enforces this.
+        Dates are the place's calendar dates as "YYYY-MM-DD" and date math is done in UTC, so the
+        server's or visitor's time zone never shifts a day. Check rounding (half-up) and null handling
+        against docs/requirements.md (Appendix A comfort model, Appendix B WMO codes, Appendix C URL).
+    - path: "lib/**/*.test.ts"
+      instructions: |
+        Tests must be deterministic: no network, no real clock, fixed fixtures. Prefer behaviour and
+        spec scenarios over implementation details; flag tests that cannot fail.
+    - path: "lib/i18n/**"
+      instructions: |
+        All UI copy lives here, Ukrainian first; en.ts mirrors uk.ts key for key. Copy rules: no "!",
+        no emoji, a unit on every number, comfort rationales are one sentence of at most 80 characters.
+    - path: "{app,components}/**"
+      instructions: |
+        Next.js 16 with Cache Components: request data (searchParams) is read inside <Suspense>;
+        caching uses "use cache" + cacheLife. Open-Meteo is called only from the server (TC-DATA-01);
+        the browser talks only to this app. No cookies, storage, analytics or third-party requests
+        (BC-PRIVACY). UI strings come from lib/i18n, never literals in JSX. Styling uses design tokens
+        and wx- classes (DESIGN.md). Check accessibility: roles, accessible names, keyboard use, focus.
+    - path: "openspec/**"
+      instructions: |
+        Specs must stay consistent with docs/requirements.md and with the code in this PR. Every
+        requirement needs testable scenarios. Flag claims that something was verified when the PR
+        does not show it.
+
+knowledge_base:
+  code_guidelines:
+    enabled: true
+    filePatterns:
+      - "AGENTS.md"
+      - "DESIGN.md"

@@ -8,6 +8,7 @@ export { Button, type ButtonProps, type ButtonVariant } from "./Button";
 export { ComfortBadge, type ComfortBadgeProps } from "./ComfortBadge";
 export { Notice, type NoticeProps } from "./Notice";
 export { DayCard, type DayCardProps } from "./DayCard";
+export { WeatherIcon, type WeatherIconProps } from "./WeatherIcon";
 export { WeekendHighlight, type WeekendHighlightProps, type WeekendDay } from "./WeekendHighlight";
 export {
   CompareTable,

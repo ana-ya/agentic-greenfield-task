@@ -1,5 +1,5 @@
 import { hiLo } from "@/lib/format";
-import { strings } from "@/lib/strings";
+import { strings } from "@/lib/i18n";
 import { ComfortBadge } from "./ComfortBadge";
 
 export const MAX_PINNED_CITIES = 3;

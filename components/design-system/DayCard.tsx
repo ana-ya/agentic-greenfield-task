@@ -1,45 +1,32 @@
-import type { ReactNode } from "react";
 import { dayLabel, temp } from "@/lib/format";
-import { strings } from "@/lib/strings";
+import { strings } from "@/lib/i18n";
 import { cx } from "@/lib/cx";
 import { ComfortBadge } from "./ComfortBadge";
+import { WeatherIcon } from "./WeatherIcon";
 
 export interface DayCardProps {
   /** Place-local calendar date, "YYYY-MM-DD". */
   date: string;
-  hi: number;
-  lo: number;
-  /**
-   * Condition glyph with its Ukrainian label, e.g. <RainIcon label="Дощ" />.
-   * (The design system's DayCardProps takes a WMO `code`; until the WMO → Lucide
-   * mapping in docs/requirements.md Appendix B lands, the caller passes the glyph.)
-   */
-  icon: ReactNode;
+  hi: number | null;
+  lo: number | null;
+  /** WMO weather code (FR-FORECAST-08). */
+  code: number | null;
   /** Precipitation probability, %. */
-  precipProb: number;
-  windKmh: number;
-  /** 0–100 comfort score. */
-  comfort: number;
+  precipProb: number | null;
+  windKmh: number | null;
+  /** 0–100 comfort score, or `null` for «Немає даних» (FR-COMFORT-09). */
+  comfort: number | null;
   /** Saturday or Sunday: accent top rule and accent-ink weekday. */
   weekend?: boolean;
   className?: string;
 }
 
-export function DayCard({
-  date,
-  hi,
-  lo,
-  icon,
-  precipProb,
-  windKmh,
-  comfort,
-  weekend = false,
-  className,
-}: DayCardProps) {
+/** One of the seven daily forecast cards (FR-FORECAST-02). */
+export function DayCard({ date, hi, lo, code, precipProb, windKmh, comfort, weekend = false, className }: DayCardProps) {
   return (
     <article className={cx("wx-day", weekend && "wx-day-weekend", className)}>
       <span className="wx-day-name">{dayLabel(date)}</span>
-      {icon}
+      <WeatherIcon code={code} />
       <span className="wx-hilo">
         {temp(hi)} <span>/ {temp(lo)}</span>
       </span>

@@ -1,7 +1,7 @@
 # Implementation roadmap — Weather Explorer
 
 > **Status: agreed (2026-11-23).** Built on [capabilities.md](capabilities.md). **All 16 decisions are resolved** (demo-scale choices; see [Decisions](#decisions) and the PRD change log). Nothing blocks M0.
-> Each slice below is meant to become **one OpenSpec change** (spec → tasks → implement → verify → archive). Created so far: `setup-engineering-foundation` (M0 foundation).
+> Each slice below is meant to become **one OpenSpec change** (spec → tasks → implement → verify → archive). Created so far: `setup-engineering-foundation` (M0 foundation, archived), `weather-core` (M0 rest + M1 + M2 in one change, per the owner's request for fewer, larger changes), `connect-vercel` (Vercel and the `deployment` spec, postponed by the owner until a demo is needed).
 
 ## Principles
 
